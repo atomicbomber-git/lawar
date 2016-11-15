@@ -1,3 +1,7 @@
 div.container {
-    margin: 20px auto 0px auto;
+    margin: 0px auto 0px auto;
+}
+
+nav {
+    width: 100%;
 }

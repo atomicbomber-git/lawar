@@ -7,7 +7,13 @@ class InventoryController extends BaseController
 {
     public function all ($request, $response)
     {
-        $items = Item::get();
-        return $this->container->view->render($response, "inventory/inventory.twig", ["items" => $items]);
+
+        $filter = $request->getQueryParam("filter");
+        if ( !$filter && $filter !== "0" ) { $filter = ""; }
+
+        $items = Item::where("name", "LIKE", "%$filter%")
+            ->get();
+
+        return $this->container->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
     }
 }

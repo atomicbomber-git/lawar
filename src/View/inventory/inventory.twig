@@ -4,23 +4,47 @@
         <title> Inventory </title>
         <link rel="stylesheet" type="text/css" href="{{ base_url() }}/public/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="{{ base_url() }}/public/css/default.css">
+        <script src="{{ base_url() }}/public/js/jquery.min.js"></script>
+        <script src="{{ base_url() }}/public/js/bootstrap.js"></script>
     </head>
 
     <body>
+        {# Navigation Bar #}
+        <nav style="position: fixed; z-index: 999" class="navbar navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand"> Lawar Shop </a>
+                </div>
+            </div>
+        </nav>
+
         <div class="container">
+
+            <div style="height: 60px"></div>
+
+            {#  Search Box! #}
             <div class="well well-sm">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label> Cari: </label>
-                        <input class="form-control" type="text" name="filter" placeholder="Nama Item">
+                <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="filter" class="form-control" placeholder="Cari...">
+                        <span class="input-group-btn">
+                            <input type="submit" class="btn btn-info" type="button" value="Cari!">
+                        </span>
                     </div>
-                    <button class="btn btn-primary btn-sm"> Submit </button>
                 </form>
             </div>
+
+            {% if filter or filter == 0 %}
+                <div class="alert alert-success">
+                    Menampilkan hasil pencarian untuk kata kunci: "{{ filter }}".
+                </div>
+            {% endif %}
+
             <ul class="list-group">
                 {% for item in items %}
                     <li class="list-group-item">
                         <div class="well well-sm" style="text-align: right">
+                            <span style="font-weight: bold; display: inline-block; float: left"> {{ loop.index }}. {{ item.name | upper }} </span>
                             <a href="#" class="btn btn-success btn-xs">
                               <span class="glyphicon glyphicon-cog"></span>
                             </a>
