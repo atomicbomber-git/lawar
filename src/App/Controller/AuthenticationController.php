@@ -4,13 +4,8 @@ namespace App\Controller;
 use App\Model\Clerk;
 use PHPassLib\Hash\BCrypt;
 
-class AuthenticationController
+class AuthenticationController extends BaseController
 {
-    public function __construct ($container)
-    {
-        $this->container = $container;
-    }
-
     public function login ($request, $response)
     {
         return $this->container->view->render($response, "authentication/login.twig");
