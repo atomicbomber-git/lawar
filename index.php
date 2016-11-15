@@ -4,6 +4,9 @@ require __DIR__ . '/vendor/autoload.php';
 /* Set timezone for date functions */
 date_default_timezone_set('Asia/Pontianak');
 
+/* Start session */
+session_start();
+
 use Slim\App as Slim;
 
 $app = new Slim([
