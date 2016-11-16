@@ -13,17 +13,50 @@
         <nav style="position: fixed; z-index: 999" class="navbar navbar-inverse">
             <div class="container">
                 <div class="navbar-header">
+
+                    <button 
+                        type="button" 
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#collapsible-navbar">
+
+                        {#  The three horizontal bar icon that indicates a menu #}
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+
+                    </button>
+
                     <a class="navbar-brand" href="{{ path_for("inventory") }}"> Lawar Shop </a>
 
                 </div>
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">
-                            Kelola Akun
-                            <span class="glyphicon glyphicon-cog"></span>
-                        </a>
-                    </li>
-                </ul>
+
+                      
+
+                {# Menu that only appears if the screen's narrow enough #}
+                <div class="collapse navbar-collapse" id="collapsible-navbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="#">
+                                Menu 1
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Menu 2
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Menu 3
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
         </nav>
 
@@ -34,10 +67,10 @@
             {#  Search Box! #}
             <div class="well well-sm">
                 <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
-                    <div class="input-group">
+                    <div class="input-group" style="width: 100%">
                         <input type="text" name="filter" class="form-control" placeholder="Cari...">
                         <span class="input-group-btn">
-                            <input type="submit" class="btn btn-info" type="button" value="Cari!">
+                            <input type="submit" style="width: 100%" class="btn btn-info" type="button" value="Cari!">
                         </span>
                     </div>
                 </form>
@@ -54,6 +87,9 @@
                     <li class="list-group-item">
                         <div class="well well-sm" style="text-align: right">
                             <span style="font-weight: bold; display: inline-block; float: left"> {{ loop.index }}. {{ item.name | upper }} </span>
+                            <a href="#" class="btn btn-warning btn-xs">
+                              <span class="glyphicon glyphicon-list-alt"></span>
+                            </a>
                             <a href="#" class="btn btn-success btn-xs">
                               <span class="glyphicon glyphicon-cog"></span>
                             </a>
