@@ -63,8 +63,20 @@ class AuthenticationController extends BaseController
                 ->withHeader('Location', $path);
         }
 
+        /* Mark the user as logged in */
+        $_SESSION["is_logged_in"] = true;
+
         $path = $this->container->get("router")->pathFor("inventory");
 
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', $path);
+    }
+
+    public function logout ($request, $response)
+    {
+        $_SESSION["is_logged_in"] = false;
+        $path = $this->container->get("router")->pathFor("login");
         return $response
             ->withStatus(302)
             ->withHeader('Location', $path);

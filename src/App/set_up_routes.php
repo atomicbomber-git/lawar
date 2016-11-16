@@ -1,8 +1,16 @@
 <?php
 /* Expects an instance of Slim\App */
+use App\Middleware\AuthMiddleware;
+
+$container = $app->getContainer();
+$auth_middleware = new AuthMiddleware($container);
 
 $app->get("/login", "AuthenticationController:login")->setName("login");
 $app->post("/login", "AuthenticationController:processLogin");
 
-$app->get("/inventory", "InventoryController:all")->setName("inventory");
-$app->get("/inventory/edit/{item_id}", "InventoryController:edit")->setName("inventory-edit");
+$app->get("/logout", "AuthenticationController:logout")->setName("logout");
+
+$app->group("/inventory", function () {
+    $this->get("", "InventoryController:all")->setName("inventory");
+    $this->get("/edit/{item_id}", "InventoryController:edit")->setName("inventory-edit");
+})->add($auth_middleware);
