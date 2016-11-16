@@ -5,6 +5,12 @@ use App\Middleware\AuthMiddleware;
 $container = $app->getContainer();
 $auth_middleware = new AuthMiddleware($container);
 
+/* Redirect to /inventory */
+$app->get("/", function ($request, $response) {
+    $path = $this->get("router")->pathFor("inventory");
+    return $response->withStatus(302)->withHeader("Location", $path);
+});
+
 $app->get("/login", "AuthenticationController:login")->setName("login");
 $app->post("/login", "AuthenticationController:processLogin");
 
