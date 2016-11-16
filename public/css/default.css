@@ -5,3 +5,7 @@ div.container {
 nav {
     width: 100%;
 }
+
+a.menu {
+    text-align: right;
+}

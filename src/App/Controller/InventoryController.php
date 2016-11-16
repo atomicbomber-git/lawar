@@ -20,4 +20,10 @@ class InventoryController extends BaseController
 
         return $this->container->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
     }
+
+    public function edit ($request, $response, $args)
+    {
+        $item = Item::find($args["item_id"]);
+        return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item]);
+    }
 }

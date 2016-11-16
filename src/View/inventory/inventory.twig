@@ -9,56 +9,9 @@
     </head>
 
     <body>
+        
         {# Navigation Bar #}
-        <nav style="position: fixed; z-index: 999" class="navbar navbar-inverse">
-            <div class="container">
-                <div class="navbar-header">
-
-                    <button 
-                        type="button" 
-                        class="navbar-toggle collapsed"
-                        data-toggle="collapse"
-                        data-target="#collapsible-navbar">
-
-                        {#  The three horizontal bar icon that indicates a menu #}
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-
-                    </button>
-
-                    <a class="navbar-brand" href="{{ path_for("inventory") }}"> Lawar Shop </a>
-
-                </div>
-
-                      
-
-                {# Menu that only appears if the screen's narrow enough #}
-                <div class="collapse navbar-collapse" id="collapsible-navbar">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="#">
-                                Menu 1
-                                <span class="glyphicon glyphicon-cog"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Menu 2
-                                <span class="glyphicon glyphicon-cog"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Menu 3
-                                <span class="glyphicon glyphicon-cog"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-        </nav>
+        {% include 'general/navbar.twig' %}
 
         <div class="container">
 
@@ -68,9 +21,9 @@
             <div class="well well-sm">
                 <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
                     <div class="input-group" style="width: 100%">
-                        <input type="text" name="filter" class="form-control" placeholder="Cari...">
+                        <input type="text" name="filter" class="form-control" placeholder="Cari..." value="{{ filter }}">
                         <span class="input-group-btn">
-                            <input type="submit" style="width: 100%" class="btn btn-info" type="button" value="Cari!">
+                            <input type="submit" class="btn btn-info" type="button" value="Cari!">
                         </span>
                     </div>
                 </form>
@@ -90,7 +43,7 @@
                             <a href="#" class="btn btn-warning btn-xs">
                               <span class="glyphicon glyphicon-list-alt"></span>
                             </a>
-                            <a href="#" class="btn btn-success btn-xs">
+                            <a href="{{ path_for('inventory-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
                               <span class="glyphicon glyphicon-cog"></span>
                             </a>
                             <a href="#" class="btn btn-danger btn-xs">
@@ -116,5 +69,10 @@
                 {% endfor %}
             </ul>
         </div>
+
+        <a href="#" class="btn btn-primary btn-sm" style="position: fixed; right: 10px; bottom: 10px">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+        </a>
+
     </body>
 </html>

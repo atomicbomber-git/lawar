@@ -1,0 +1,40 @@
+{# Navigation Bar #}
+<nav style="position: fixed; z-index: 999" class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+        <button 
+            type="button" 
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#collapsible-navbar">
+
+            {#  The three horizontal bar icon that indicates a menu #}
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+
+        </button>
+
+        <a class="navbar-brand" href="{{ path_for('inventory') }}"> Lawar Shop </a>
+    </div>
+
+    {# Menu that only appears if the screen's narrow enough #}
+    <div class="collapse navbar-collapse" id="collapsible-navbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="menu" href="{{ path_for('inventory') }}">
+                        Halaman Utama
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu" href="#">
+                        Keluar
+                        <span class="glyphicon glyphicon-log-out"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
