@@ -7,4 +7,15 @@ class BaseController
     {
         $this->container = $container;
     }
+
+    public function __get($value) {
+        switch ($value) {
+            case "view":
+                return $this->container->view;
+            case "router":
+                return $this->container->get("router");
+            default:
+                return null;
+        }        
+    }
 }

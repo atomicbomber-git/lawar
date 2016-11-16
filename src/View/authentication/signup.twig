@@ -1,0 +1,49 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Halaman Pendaftaran {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div style="height: 20px"></div>
+        <fieldset>
+            <legend> Pendaftaran Akun Pegawai </legend>
+            <form action="{{ base_url() }}/signup" method="POST">
+                
+                <div class="form-group {% if message.error.username %} has-error {% endif %}">
+                    <label class="control-label"> Nama Pengguna: </label>
+                    <input class="form-control" type="text" name="username" placeholder="Nama Pengguna" >
+                    {% if message.error.username %} <span class="help-block"> {{ message.error.username }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.phone %} has-error {% endif %}">
+                    <label class="control-label"> Nomor Telepon: </label>
+                    <input class="form-control" type="phone" name="phone" placeholder="Nomor Telepon" >
+                    {% if message.error.phone %} <span class="help-block"> {{ message.error.phone }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.password %} has-error {% endif %}">
+                    <label class="control-label"> Kata Sandi: </label>
+                    <input class="form-control" type="password" name="password" placeholder="Kata Sandi" >
+                    {% if message.error.password %} <span class="help-block"> {{ message.error.password }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.password_retry %} has-error {% endif %}">
+                    <label class="control-label"> Ulangi Kata Sandi: </label>
+                    <input class="form-control" type="password" name="password_retry" placeholder="Ulangi Kata Sandi" >
+                    {% if message.error.password_retry %} <span class="help-block"> {{ message.error.password_retry }} </span> {% endif %}
+                </div>
+
+                {% if message.error.user_exists %}
+                    <div class="alert alert-danger">
+                        {{ message.error.user_exists }}
+                    </div>
+                {% endif %}
+
+                <div style="text-align: right">
+                    <a href="{{ path_for('login') }}" class="btn btn-secondary"> Kembali ke Halaman Masuk </a>
+                    <button class="btn btn-primary"> Daftarkan </button>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+{% endblock %}

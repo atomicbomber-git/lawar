@@ -13,8 +13,9 @@ $app->get("/", function ($request, $response) {
 
 $app->get("/login", "AuthenticationController:login")->setName("login");
 $app->post("/login", "AuthenticationController:processLogin");
-
 $app->get("/logout", "AuthenticationController:logout")->setName("logout");
+$app->get("/signup", "AuthenticationController:signup")->setName("signup");
+$app->post("/signup", "AuthenticationController:processSignup");
 
 $app->group("/inventory", function () {
     $this->get("", "InventoryController:all")->setName("inventory");
