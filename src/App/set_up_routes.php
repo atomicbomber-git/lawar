@@ -13,4 +13,5 @@ $app->get("/logout", "AuthenticationController:logout")->setName("logout");
 $app->group("/inventory", function () {
     $this->get("", "InventoryController:all")->setName("inventory");
     $this->get("/edit/{item_id}", "InventoryController:edit")->setName("inventory-edit");
+    $this->post("/edit/{item_id}", "InventoryController:processEdit")->setName("inventory-process-edit");
 })->add($auth_middleware);

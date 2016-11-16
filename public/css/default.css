@@ -9,3 +9,7 @@ nav {
 a.menu {
     text-align: right;
 }
+
+div.spacer {
+    height: 70px;
+}

@@ -26,4 +26,14 @@ class InventoryController extends BaseController
         $item = Item::find($args["item_id"]);
         return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item]);
     }
+
+    public function processEdit ($request, $response, $args)
+    {
+
+        $item = Item::find($args["item_id"]);
+        $item->update( $request->getParsedBody() );
+
+        $path = $this->container->get("router")->pathFor("inventory");
+        return $response->withStatus(302)->withHeader("Location", $path);
+    }
 }
