@@ -45,6 +45,9 @@ class InventoryController extends BaseController
 
     public function processDeleteItem ($request, $response, $args)
     {
+        $item = Item::find($args["item_id"]);
+        $item->delete();
 
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory") );
     }
 }
