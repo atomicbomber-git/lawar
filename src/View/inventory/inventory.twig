@@ -44,10 +44,10 @@
                             <a href="#" class="btn btn-warning btn-xs">
                               <span class="glyphicon glyphicon-list-alt"></span>
                             </a>
-                            <a href="{{ path_for('inventory-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
+                            <a href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
                               <span class="glyphicon glyphicon-cog"></span>
                             </a>
-                            <a href="#" class="btn btn-danger btn-xs">
+                            <a href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs">
                               <span class="glyphicon glyphicon-remove"></span>
                             </a>
                         </div>

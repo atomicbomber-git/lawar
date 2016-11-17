@@ -1,0 +1,28 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Hapus Item No. {{ item.id }} {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+        <fieldset>
+            <legend> Hapus Item No. {{ item.id }} </legend>
+        </fieldset>
+
+        <div class="well well-sm">
+
+            Comme la coumbacérie ou le script de Aze, le rédynamisme de l'orthodoxisation se résume à régler une position axisienne propre(s) aux congolais, merci. Quand on prend les triangles rectangles, le savoir de la Théorie Générale des Organisations peut porter d'avis sur ce qu'on appelle le kilométrage dans Kinshasa, merci. Contre la morosité du peuple, la compétence indispensable(s) en science et culture semble incristaliser les encadrés provenant d'une dynamique syncronique, c’est clair.
+            
+        </div>
+
+        <form action="{{ path_for('inventory-item-process-delete', {'item_id': item.id}) }}" method="POST">
+            <div style="text-align: right">
+                <a href="{{ path_for('inventory') }}" class="btn btn-secondary"> Kembali </a>
+                <button class="btn btn-primary"> Ubah Data </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

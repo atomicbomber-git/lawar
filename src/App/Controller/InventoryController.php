@@ -21,13 +21,13 @@ class InventoryController extends BaseController
         return $this->container->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
     }
 
-    public function edit ($request, $response, $args)
+    public function editItem ($request, $response, $args)
     {
         $item = Item::find($args["item_id"]);
         return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item]);
     }
 
-    public function processEdit ($request, $response, $args)
+    public function processEditItem ($request, $response, $args)
     {
 
         $item = Item::find($args["item_id"]);
@@ -35,5 +35,16 @@ class InventoryController extends BaseController
 
         $path = $this->container->get("router")->pathFor("inventory");
         return $response->withStatus(302)->withHeader("Location", $path);
+    }
+
+    public function deleteItem ($request, $response, $args)
+    {
+        $item = Item::find($args["item_id"]);
+        return $this->view->render($response, "inventory/item_delete.twig", ["item" => $item]);
+    } 
+
+    public function processDeleteItem ($request, $response, $args)
+    {
+
     }
 }

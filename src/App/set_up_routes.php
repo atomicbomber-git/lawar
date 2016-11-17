@@ -5,9 +5,9 @@ use App\Middleware\AuthMiddleware;
 $container = $app->getContainer();
 $auth_middleware = new AuthMiddleware($container);
 
-/* Redirect to /inventory */
+/* Redirect to /login */
 $app->get("/", function ($request, $response) {
-    $path = $this->get("router")->pathFor("inventory");
+    $path = $this->get("router")->pathFor("login");
     return $response->withStatus(302)->withHeader("Location", $path);
 });
 
@@ -19,6 +19,8 @@ $app->post("/signup", "AuthenticationController:processSignup");
 
 $app->group("/inventory", function () {
     $this->get("", "InventoryController:all")->setName("inventory");
-    $this->get("/edit/{item_id}", "InventoryController:edit")->setName("inventory-edit");
-    $this->post("/edit/{item_id}", "InventoryController:processEdit")->setName("inventory-process-edit");
+    $this->get("/edit/{item_id}", "InventoryController:editItem")->setName("inventory-item-edit");
+    $this->post("/edit/{item_id}", "InventoryController:processEditItem")->setName("inventory-item-process-edit");
+    $this->get("/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");
+    $this->post("/delete/{item_id}", "InventoryController:processDeleteItem")->setName("inventory-item-process-delete");
 })->add($auth_middleware);

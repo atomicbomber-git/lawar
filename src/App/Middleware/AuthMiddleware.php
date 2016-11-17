@@ -15,8 +15,8 @@ class AuthMiddleware
         if ( ! $_SESSION["is_logged_in"] ) {
             $path = $this->container->get("router")->pathFor("login");
 
-            /* Error message to be passed to the login page processor */
-            $_SESSION["message"]["error"]["must_log_in"] = "Anda harus log in terlebih dahulu";
+            /* Indicates that an error has occured */
+            $_SESSION["message"]["error"]["must_log_in"] = true;
 
             return $response->withStatus(302)->withHeader("Location", $path);
         }
