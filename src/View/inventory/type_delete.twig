@@ -1,0 +1,31 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Hapus Tipe: "{{ type.name }}"" {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+        
+        <fieldset>
+            <legend> Hapus Kategori "{{ type.name }}" </legend>
+            <div class="alert alert-danger">
+                <p> <strong> Anda yakin ingin menghapus tipe "{{ type.name }}"? </strong> </p>
+                <p>
+                    Keseluruh <strong> {{ type.items.count() }} </strong> item yang tergolong di dalam
+                    tipe ini akan ikut terhapus!
+                </p>
+            </div>
+
+            <form action="{{ path_for('inventory-type-process-delete', {'type_id': type.id}) }}" method="POST">
+                <div class="form-group" style="text-align: right">
+                    <a href="{{ path_for('type') }}" class="btn btn-secondary"> Kembali </a>
+                    <input type="submit" class="btn btn-danger" value="Hapus">
+                </div>
+            </form>
+        </fieldset>
+
+    </div>
+{% endblock %}

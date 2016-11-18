@@ -19,7 +19,7 @@ class InventoryController extends BaseController
         $items = Item::where("name", "LIKE", "%$filter%")
             ->get();
 
-        return $this->container->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
+        return $this->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
     }
 
     public function editItem ($request, $response, $args)
@@ -67,14 +67,32 @@ class InventoryController extends BaseController
 
     public function type ($request, $response)
     {
+        /* Retrieve messages that were stored in the session */
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         $types = Type::get();
-        return $this->view->render($response, "inventory/type.twig", ["types" => $types]);
+        return $this->view->render($response, "inventory/type.twig", ["types" => $types, "message" => $message]);
+    }
+
+    public function addType ($request, $response)
+    {
+        $type = new Type;
+        $type->name = $request->getParsedBody()["name"];
+        $type->save();
+
+        /* Success message to be displayed on the type page! */
+        $_SESSION["message"]["success"]["add"] = "Tipe '$type->name' berhasil ditambahkan.";
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("type"));
     }
 
     public function editType ($request, $response, $args)
     {
         $type = Type::find($args["type_id"]);
-        return $this->container->view->render($response, "inventory/type_edit.twig", ["type" => $type]);
+        return $this->view->render($response, "inventory/type_edit.twig", ["type" => $type]);
     }
 
     public function processEditType ($request, $response, $args)
@@ -87,6 +105,24 @@ class InventoryController extends BaseController
         $path = $this->router->pathFor("type");
         return $response->withStatus(302)->withHeader("Location", $path);
 
-        /* A test commit */
+    }
+
+    public function deleteType ($request, $response, $args)
+    {
+        $type = Type::find($args["type_id"]);
+
+        return $this->view->render($response, "inventory/type_delete.twig", ["type" => $type]);
+    }
+
+    public function processDeleteType ($request, $response, $args)
+    {
+        $type = Type::find($args["type_id"]);
+
+        /* Success message to be displayed on the type page! */
+        $_SESSION["message"]["success"]["delete"] = "Tipe '$type[name]' berhasil dihapus.";
+
+        $type->delete();
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("type"));
     }
 }

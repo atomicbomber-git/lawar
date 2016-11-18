@@ -11,7 +11,24 @@
         <div style="height: 60px; margin-bottom: 15px"></div>
 
         <fieldset>
-            <legend> Daftar Tipe Barang </legend>
+            <legend> Kelola Tipe Barang </legend>
+
+            <div class="well well-sm">
+                <form action="{{ path_for('inventory-type-add') }}" method="POST">
+                    <div class="form-group">
+                        <label> Tambahkan Input Baru: </label>
+                        <div class="input-group">
+                            <input class="form-control" name="name" type="text" placeholder="Nama tipe baru...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"> </span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -30,7 +47,7 @@
                                     Sunting
                                     <span class="glyphicon glyphicon-cog"> </span>
                                 </a>
-                                <a href="#" class="btn btn-danger btn-xs">
+                                <a href="{{ path_for('inventory-type-delete', {'type_id':  type.id}) }}" class="btn btn-danger btn-xs">
                                     Hapus
                                     <span class="glyphicon glyphicon-remove"> </span>
                                 </a>
@@ -40,6 +57,14 @@
                 </tbody>
             </table>
         </fieldset>
+
+        {% if message.success %}
+            {% for msg in message.success %}
+                <div class="alert alert-success">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
     </div>
 
