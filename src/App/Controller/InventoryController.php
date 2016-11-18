@@ -130,6 +130,9 @@ class InventoryController extends BaseController
         $type->name = $request->getParsedBody()["name"];
         $type->save();
 
+        /* Success message to be displayed on the type page! */
+        $_SESSION["message"]["success"]["add"] = "Pengubahan data berhasil dilakukan.";
+
         $path = $this->router->pathFor("type");
         return $response->withStatus(302)->withHeader("Location", $path);
 

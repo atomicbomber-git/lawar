@@ -9,18 +9,28 @@
     <div class="container">
 
         <div style="height: 60px"></div>
+        
+        {# <form action="{{ path_for('inventory') }}" method="GET">
 
-        {#  Search Box! #}
-        <div class="well well-sm">
-            <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
-                <div class="input-group" style="width: 100%">
-                    <input type="text" name="filter" class="form-control" placeholder="Cari..." value="{{ filter }}">
-                    <span class="input-group-btn">
-                        <input type="submit" class="btn btn-primary" type="button" value="Cari!">
-                    </span>
+                <div class="form-group">
+                    <label> Teks filter: </label>
+                    <input class="form-control" type="text" name="filter" placeholder="Teks filter...">
                 </div>
-            </form>
-        </div>
+
+                <div class="form-group">
+                    <label> Berdasarkan: </label>
+                    <select class="form-control" name="filter_type">
+                        <option> Nama </option>
+                        <option> Ukuran </option>
+                        <option> Tipe </option>
+                        <option> Deskripsi </option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="text-align:right">
+                    <input class="btn btn-primary" type="submit" value="Cari">
+                </div>
+            </form> #}
 
         {% if (filter or filter == 0) and filter != "" %}
             <div class="alert alert-success">
