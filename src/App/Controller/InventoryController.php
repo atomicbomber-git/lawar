@@ -50,4 +50,9 @@ class InventoryController extends BaseController
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory") );
     }
+
+    public function type ($request, $response)
+    {
+        return $this->view->render($response, "inventory/type.twig");
+    }
 }

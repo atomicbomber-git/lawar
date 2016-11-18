@@ -19,8 +19,9 @@ $app->post("/signup", "AuthenticationController:processSignup");
 
 $app->group("/inventory", function () {
     $this->get("", "InventoryController:all")->setName("inventory");
-    $this->get("/edit/{item_id}", "InventoryController:editItem")->setName("inventory-item-edit");
-    $this->post("/edit/{item_id}", "InventoryController:processEditItem")->setName("inventory-item-process-edit");
-    $this->get("/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");
-    $this->post("/delete/{item_id}", "InventoryController:processDeleteItem")->setName("inventory-item-process-delete");
+    $this->get("/item/edit/{item_id}", "InventoryController:editItem")->setName("inventory-item-edit");
+    $this->post("/item/edit/{item_id}", "InventoryController:processEditItem")->setName("inventory-item-process-edit");
+    $this->get("/item/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");
+    $this->post("/item/delete/{item_id}", "InventoryController:processDeleteItem")->setName("inventory-item-process-delete");
+    $this->get("/type", "InventoryController:type")->setName("type");
 })->add($auth_middleware);

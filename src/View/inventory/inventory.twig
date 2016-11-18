@@ -1,73 +1,63 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title> Inventory </title>
-        <link rel="stylesheet" type="text/css" href="{{ base_url() }}/public/css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="{{ base_url() }}/public/css/default.css">
-        <script src="{{ base_url() }}/public/js/jquery.min.js"></script>
-        <script src="{{ base_url() }}/public/js/bootstrap.js"></script>
+{% extends 'general/base.twig' %}
 
-    </head>
+{% block title %} Inventory | Semua Item {% endblock %}
 
-    <body>
-        
-        {# Navigation Bar #}
-        {% include 'general/navbar.twig' %}
-        
-        <div class="container">
+{% block body %}
+{# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
 
-            <div style="height: 60px"></div>
+    <div class="container">
 
-            {#  Search Box! #}
-            <div class="well well-sm">
-                <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
-                    <div class="input-group" style="width: 100%">
-                        <input type="text" name="filter" class="form-control" placeholder="Cari..." value="{{ filter }}">
-                        <span class="input-group-btn">
-                            <input type="submit" class="btn btn-primary" type="button" value="Cari!">
-                        </span>
-                    </div>
-                </form>
-            </div>
+        <div style="height: 60px"></div>
 
-            {% if (filter or filter == 0) and filter != "" %}
-                <div class="alert alert-success">
-                    Menampilkan hasil pencarian untuk kata kunci: "{{ filter }}".
+        {#  Search Box! #}
+        <div class="well well-sm">
+            <form class="form-inline" action="{{ path_for('inventory') }}" method="GET">
+                <div class="input-group" style="width: 100%">
+                    <input type="text" name="filter" class="form-control" placeholder="Cari..." value="{{ filter }}">
+                    <span class="input-group-btn">
+                        <input type="submit" class="btn btn-primary" type="button" value="Cari!">
+                    </span>
                 </div>
-            {% endif %}
-
-            <ul class="list-group">
-                {% for item in items %}
-                    <li class="list-group-item">
-                        <div class="well well-sm" style="text-align: right">
-                            <span style="font-weight: bold; display: inline-block; float: left"> {{ loop.index }}. {{ item.name | upper }} </span>
-                            <a href="#" class="btn btn-warning btn-xs">
-                              <span class="glyphicon glyphicon-list-alt"></span>
-                            </a>
-                            <a href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
-                              <span class="glyphicon glyphicon-cog"></span>
-                            </a>
-                            <a href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs">
-                              <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                        </div>
-                        <p>
-                            {{ item.description }}                    
-                        </p>
-                        <div style="text-align: right">
-                            <a href="#" class="btn btn-info btn-xs">
-                                Tambahkan
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </a>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+            </form>
         </div>
 
-        <a href="#" class="btn btn-primary btn-sm" style="position: fixed; right: 10px; bottom: 10px">
-            <span class="glyphicon glyphicon-shopping-cart"></span>
-        </a>
+        {% if (filter or filter == 0) and filter != "" %}
+            <div class="alert alert-success">
+                Menampilkan hasil pencarian untuk kata kunci: "{{ filter }}".
+            </div>
+        {% endif %}
 
-    </body>
-</html>
+        <ul class="list-group">
+            {% for item in items %}
+                <li class="list-group-item">
+                    <div class="well well-sm" style="text-align: right">
+                        <span style="font-weight: bold; display: inline-block; float: left"> {{ loop.index }}. {{ item.name | upper }} </span>
+                        <a href="#" class="btn btn-warning btn-xs">
+                          <span class="glyphicon glyphicon-list-alt"></span>
+                        </a>
+                        <a href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
+                          <span class="glyphicon glyphicon-cog"></span>
+                        </a>
+                        <a href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs">
+                          <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                    <p>
+                        {{ item.description }}                    
+                    </p>
+                    <div style="text-align: right">
+                        <a href="#" class="btn btn-info btn-xs">
+                            Tambahkan
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="#" class="btn btn-primary btn-sm" style="position: fixed; right: 10px; bottom: 10px">
+        <span class="glyphicon glyphicon-shopping-cart"></span>
+    </a>
+{% endblock %}
