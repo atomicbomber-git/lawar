@@ -5,15 +5,32 @@
     <ul class="nav navbar-nav navbar-right">
         <li>
             <a class="menu" href="{{ path_for('inventory') }}">
-                Halaman Utama
                 <span class="glyphicon glyphicon-home"></span>
+                Halaman Utama
             </a>
         </li>
         <li>
             <a class="menu" href="{{ path_for('logout') }}">
-                Keluar
                 <span class="glyphicon glyphicon-log-out"></span>
+                Keluar
             </a>
         </li>
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Kelola
+                <span class="caret"></span>    
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#"> <span class="glyphicon glyphicon-cog"></span> Kelola Kategori </a>
+
+                </li>
+                <li>
+                    <a href="#"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 {% endblock %}
