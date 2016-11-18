@@ -24,12 +24,18 @@ class InventoryController extends BaseController
 
     public function editItem ($request, $response, $args)
     {
+        /* Retrieve messages that were stored in the session */
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         $item = Item::find($args["item_id"]);
 
         /* List of all available types to be displayed in <select> tag */
         $types = Type::get();
 
-        return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item, "types" => $types]);
+        return $this->view->render($response, "inventory/item_edit.twig", ["item" => $item, "types" => $types, "message" => $message]);
     }
 
     public function processEditItem ($request, $response, $args)
@@ -38,7 +44,10 @@ class InventoryController extends BaseController
         $item = Item::find($args["item_id"]);
         $item->update( $request->getParsedBody() );
 
-        $path = $this->container->get("router")->pathFor("inventory");
+        /* Success message to be displayed on the edit page! */
+        $_SESSION["message"]["success"]["edit"] = "Data berhasil diubah!";
+
+        $path = $this->router->pathFor("inventory-item-edit", ["item_id" => $args["item_id"]]);
         return $response->withStatus(302)->withHeader("Location", $path);
     }
 
