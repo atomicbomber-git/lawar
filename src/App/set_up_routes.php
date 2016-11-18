@@ -22,6 +22,8 @@ $app->group("/inventory", function () {
     $this->get("", "InventoryController:all")->setName("inventory");
 
     /* Routes pertaining the item management functionality */
+    $this->get("/item/add", "InventoryController:addItem")->setName("inventory-item-add");
+    $this->post("/item/add", "InventoryController:processAddItem")->setName("inventory-item-process-add");
     $this->get("/item/edit/{item_id}", "InventoryController:editItem")->setName("inventory-item-edit");
     $this->post("/item/edit/{item_id}", "InventoryController:processEditItem")->setName("inventory-item-process-edit");
     $this->get("/item/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");

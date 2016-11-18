@@ -22,6 +22,28 @@ class InventoryController extends BaseController
         return $this->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
     }
 
+    public function addItem ($request, $response)
+    {
+        /* Retrieve messages that were stored in the session */
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
+        $types = Type::get();
+        return $this->view->render($response, "inventory/item_add.twig", ["types" => $types, "message" => $message]);
+    }
+
+    public function processAddItem ($request, $response)
+    {
+        $item = new Item( $request->getParsedBody() );
+        $item->save();
+
+        $_SESSION["message"]["success"]["add"] = "Item '$item->name' berhasil ditambahkan!";
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
+    }
+
     public function editItem ($request, $response, $args)
     {
         /* Retrieve messages that were stored in the session */

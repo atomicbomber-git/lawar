@@ -1,0 +1,62 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Tambahkan Item Baru {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+        <fieldset>
+            <legend> Tambahkan Item Baru </legend>
+        </fieldset>
+        <form action="{{ path_for('inventory-item-process-add') }}" method="POST">
+            <div class="form-group">
+                <label class="control-label"> Nama Item: </label>
+                <input class="form-control" type="text" name="name" placeholder="Nama Item">
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Deskripsi: </label>
+                <textarea class="form-control" name="description" placeholder="Deskripsi barang"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Ukuran Item: </label>
+                <input class="form-control" name="size" type="text" placeholder="Ukuran Item">
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Tipe Item: </label>
+                <select class="form-control" name="type">
+                    {% for type in types %}
+                        <option value="{{ type.id }}"> {{ type.name }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" style="text-align: right">
+                <a href="{{ path_for('inventory') }}" class="btn btn-secondary"> Kembali </a>
+                <button class="btn btn-primary">
+                    Tambahkan
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+
+        </form>
+
+        {% if message %}
+            {% for msg in message.success %}
+                <div class="alert alert-success">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+
+            {% for msg in message.error %}
+                <div class="alert alert-danger">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+{% endblock %}
