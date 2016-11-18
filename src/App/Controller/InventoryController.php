@@ -79,6 +79,12 @@ class InventoryController extends BaseController
 
     public function addType ($request, $response)
     {
+
+        if ( ! $request->getParsedBody()["name"] && $request->getParsedBody()["name"] !== "0" ) {
+            $_SESSION["message"]["error"]["name"] = "Nama tipe baru tidak boleh kosong.";
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("type"));
+        }
+
         $type = new Type;
         $type->name = $request->getParsedBody()["name"];
         $type->save();

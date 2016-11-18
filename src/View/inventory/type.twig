@@ -58,9 +58,15 @@
             </table>
         </fieldset>
 
-        {% if message.success %}
+        {% if message %}
             {% for msg in message.success %}
                 <div class="alert alert-success">
+                    {{ msg }}
+                </div>
+            {% endfor %}
+
+            {% for msg in message.error %}
+                <div class="alert alert-danger">
                     {{ msg }}
                 </div>
             {% endfor %}
