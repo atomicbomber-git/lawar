@@ -73,5 +73,7 @@ class InventoryController extends BaseController
 
         $path = $this->router->pathFor("type");
         return $response->withStatus(302)->withHeader("Location", $path);
+
+        /* A test commit */
     }
 }
