@@ -25,7 +25,11 @@ class InventoryController extends BaseController
     public function editItem ($request, $response, $args)
     {
         $item = Item::find($args["item_id"]);
-        return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item]);
+
+        /* List of all available types to be displayed in <select> tag */
+        $types = Type::get();
+
+        return $this->container->view->render($response, "inventory/item_edit.twig", ["item" => $item, "types" => $types]);
     }
 
     public function processEditItem ($request, $response, $args)

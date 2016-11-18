@@ -27,9 +27,9 @@
             <div class="form-group">
                 <label class="control-label"> Tipe Item: </label>
                 <select class="form-control" name="type">
-                    <option value="1"> Tipe 1 </option>
-                    <option value="2"> Tipe 2 </option>
-                    <option value="3"> Tipe 3 </option>
+                    {% for type in types %}
+                        <option value="{{ type.id }}" {% if type.id == item.type %} selected="true" {% endif %} > {{ type.name }} </option>
+                    {% endfor %}
                 </select>
             </div>
 

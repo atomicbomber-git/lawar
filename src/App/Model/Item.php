@@ -7,6 +7,11 @@ class Item extends Model
 {
     public $timestamps = false;
 
+    /* Reverse one to many relationship with App\Model\Type */
+    public function type()
+    {
+        return $this->belongsTo("App\Model\Type");
+    }
 
     /* Fields that can be mass filled */
     public $fillable = [
