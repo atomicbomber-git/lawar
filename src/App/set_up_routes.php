@@ -24,4 +24,6 @@ $app->group("/inventory", function () {
     $this->get("/item/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");
     $this->post("/item/delete/{item_id}", "InventoryController:processDeleteItem")->setName("inventory-item-process-delete");
     $this->get("/type", "InventoryController:type")->setName("type");
+    $this->get("/type/edit/{type_id}", "InventoryController:editType")->setName("inventory-type-edit");
+    $this->post("/type/edit/{type_id}", "InventoryController:processEditType")->setName("inventory-type-process-edit");
 })->add($auth_middleware);

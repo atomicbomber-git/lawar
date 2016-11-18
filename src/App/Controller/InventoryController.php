@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Model\Item;
+use App\Model\Type;
 
 class InventoryController extends BaseController
 {
@@ -53,6 +54,24 @@ class InventoryController extends BaseController
 
     public function type ($request, $response)
     {
-        return $this->view->render($response, "inventory/type.twig");
+        $types = Type::get();
+        return $this->view->render($response, "inventory/type.twig", ["types" => $types]);
+    }
+
+    public function editType ($request, $response, $args)
+    {
+        $type = Type::find($args["type_id"]);
+        return $this->container->view->render($response, "inventory/type_edit.twig", ["type" => $type]);
+    }
+
+    public function processEditType ($request, $response, $args)
+    {
+
+        $type = Type::find($args["type_id"]);
+        $type->name = $request->getParsedBody()["name"];
+        $type->save();
+
+        $path = $this->router->pathFor("type");
+        return $response->withStatus(302)->withHeader("Location", $path);
     }
 }

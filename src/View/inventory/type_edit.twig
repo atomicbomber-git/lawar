@@ -1,0 +1,24 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Edit Tipe: {{ type.name }} {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+        <fieldset>
+            <legend> Sunting Tipe: "{{ type.name }}" </legend>
+        </fieldset>
+        <form action="{{ path_for('inventory-type-process-edit', {'type_id': type.id}) }}" method="POST">
+            <div class="form-group">
+                <label class="control-label"> Nama Tipe: </label>
+                <input class="form-control" type="text" name="name" placeholder="Nama Tipe" value="{{ type.name }}">
+            </div>
+            <div style="text-align: right">
+                <button class="btn btn-primary"> Ubah Data </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

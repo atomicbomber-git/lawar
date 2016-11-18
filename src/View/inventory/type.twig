@@ -8,10 +8,39 @@
 
     <div class="container">
 
-        <div style="height: 60px"></div>
+        <div style="height: 60px; margin-bottom: 15px"></div>
 
+        <fieldset>
+            <legend> Daftar Tipe Barang </legend>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> No. </th>
+                        <th> Nama Tipe </th>
+                        <th> Kendali </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for type in types %}
+                        <tr>
+                            <td> {{ loop.index }} </td>
+                            <td> {{ type.name }} </td>
+                            <td>
+                                <a href="{{ path_for('inventory-type-edit', {'type_id':  type.id}) }}" class="btn btn-success btn-xs">
+                                    Sunting
+                                    <span class="glyphicon glyphicon-cog"> </span>
+                                </a>
+                                <a href="#" class="btn btn-danger btn-xs">
+                                    Hapus
+                                    <span class="glyphicon glyphicon-remove"> </span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
 
-        
     </div>
 
 
