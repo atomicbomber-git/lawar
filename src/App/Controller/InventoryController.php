@@ -3,23 +3,73 @@ namespace App\Controller;
 
 use App\Model\Item;
 use App\Model\Type;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class InventoryController extends BaseController
 {
     public function all ($request, $response)
     {
-        /* Attempt to retrieve the filter query from the URL s*/
-        $filter = $request->getQueryParam("filter");
+        $items = Item::get();
+        return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
+    }
+
+    public function filtered ($request, $response) {
+
+        $keyword = $request->getQueryParam("keyword");
+        $filter_type = $request->getQueryParam("filter_type");
 
         /* Bizarre PHP behavior where "0" is treated as a false value; Have to add an exception so it isn't
             treated as so.
         */
-        if ( !$filter && $filter !== "0" ) { $filter = ""; }
+        if ( !$keyword && $keyword !== "0" ) {
+            /* The keyword query must not be empty. */
+            $_SESSION["message"]["error"]["keyword"] = "Error: Kata kunci tidak boleh kosong.";
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-search"));
+        }
 
-        $items = Item::where("name", "LIKE", "%$filter%")
+        $items = Capsule::table( Capsule::raw("items JOIN types ON items.type = types.id") )
+            ->select( Capsule::raw("
+                items.id AS id,
+                types.name AS type,
+                items.name AS name,
+                items.description AS description,
+                items.size AS size
+            "))
+            ->havingRaw("$filter_type LIKE '%$keyword%'")
             ->get();
 
-        return $this->view->render($response, "inventory/inventory.twig", ["items" => $items, "filter" => $filter]);
+        /* Search params to be shown as alert in the result page */
+        $search_params["keyword"] = $keyword;
+        switch ($filter_type) {
+            case "name":
+                $search_params["filter_type"] = "nama";
+                break;
+
+            case "size":
+                $search_params["filter_type"] = "ukuran";
+                break;
+
+            case "type":
+                $search_params["filter_type"] = "tipe";
+                break;
+
+            case "type":
+                $search_params["filter_type"] = "deskripsi";
+                break;
+        }
+
+        return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
+    }
+
+    public function searchItem ($request, $response)
+    {
+
+        if (isset($_SESSION["message"])) {
+            $message = $_SESSION["message"];
+            unset($_SESSION["message"]);
+        }
+
+        return $this->view->render($response, "inventory/item_search.twig", ["message" => $message]);
     }
 
     public function addItem ($request, $response)
