@@ -28,7 +28,7 @@
                 <label class="control-label"> Tipe Item: </label>
                 <select class="form-control" name="type">
                     {% for type in types %}
-                        <option value="{{ type.id }}"> {{ type.name }} </option>
+                        <option value="{{ type.id }}" {% if loop.index == 1 %} selected {% endif %}> {{ type.name }} </option>
                     {% endfor %}
                 </select>
             </div>
