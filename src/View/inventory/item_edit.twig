@@ -25,13 +25,22 @@
                 <input class="form-control" name="size" type="text" placeholder="Ukuran Item" value="{{ item.size }}">
             </div>
             <div class="form-group">
-                <label class="control-label"> Tipe Item: </label>
+                <label class="control-label"> Tipe: </label>
                 <select class="form-control" name="type_id">
                     {% for type in types %}
                         <option value="{{ type.id }}" {% if type.id == item.type_id %} selected="true" {% endif %} > {{ type.name }} </option>
                     {% endfor %}
                 </select>
             </div>
+            <div class="form-group">
+                <label class="control-label"> Stock Toko: </label>
+                <input class="form-control" name="stock_store" type="number" min="0" placeholder="Stock Gudang" value="{{ item.stock_store }}">
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Stock Barang: </label>
+                <input class="form-control" name="stock_warehouse" type="number" min="0" placeholder="Stock Toko" value="{{ item.stock_warehouse }}">
+            </div>
+            
 
             <div class="form-group" style="text-align: right">
                 <a href="{{ path_for('inventory') }}" class="btn btn-secondary"> Kembali </a>
