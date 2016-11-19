@@ -10,6 +10,6 @@ class Type extends Model
     /* A 'Type' can has many 'Item's that belong to it */
     public function items()
     {
-        return $this->hasMany("App\Model\Item", "type");
+        return $this->hasMany("App\Model\Item");
     }
 }

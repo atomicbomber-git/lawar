@@ -27,16 +27,20 @@ class InventoryController extends BaseController
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-search"));
         }
 
-        $items = Capsule::table( Capsule::raw("items JOIN types ON items.type = types.id") )
-            ->select( Capsule::raw("
-                items.id AS id,
-                types.name AS type,
-                items.name AS name,
-                items.description AS description,
-                items.size AS size
-            "))
-            ->havingRaw("$filter_type LIKE '%$keyword%'")
-            ->get();
+        if ($filter_type !== "type") {
+
+            $items = Item::with("type")
+                ->having($filter_type, "LIKE", "%$keyword%")
+                ->get();
+
+        }
+        else {
+            $items = Item::with("type")
+                ->whereHas("type", function ($query) use ($keyword) {
+                    $query->where("name", "LIKE", "%$keyword%");
+                })
+                ->get();
+        }
 
         /* Search params to be shown as alert in the result page */
         $search_params["keyword"] = $keyword;
