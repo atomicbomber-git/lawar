@@ -1,0 +1,27 @@
+<li class="list-group-item">
+    <div class="well well-sm" style="text-align: right; margin-bottom: 5px">
+        <span style="font-weight: bold; display: inline-block; float: left">
+            {{ loop.index }}. {{ item.name | upper }}
+        </span>
+        <a href="#" class="btn btn-warning btn-xs">
+            <span class="glyphicon glyphicon-list-alt"></span>
+        </a>
+        <a href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs">
+            <span class="glyphicon glyphicon-cog"></span>
+        </a>
+        <a href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </div>
+        <span style="display: inline-block" class="label label-default"> {{ item.size | upper }} </span>
+        <span style="display: inline-block" class="label label-info"> {{ item.type | upper }} </span>
+    <p style="padding: 7px">
+        "{{ item.description }}"                    
+    </p>
+    <div style="text-align: right">
+        <a href="#" class="btn btn-primary btn-xs">
+            Tambahkan
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </div>
+</li>
