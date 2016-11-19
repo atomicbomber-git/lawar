@@ -39,4 +39,7 @@ $app->group("/inventory", function () {
     $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
     $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
 
+    /* Routes pertaining the shopping cart functionality */
+    $this->get("/cart", "InvoiceController:cart")->setName("cart");
+
 })->add($auth_middleware);

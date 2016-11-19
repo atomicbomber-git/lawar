@@ -20,7 +20,13 @@ $container["AuthenticationController"] = function ($container)
     return new AuthenticationController($container);
 };
 
-/* Authentication controller */
+/* Invoice controller */
+$container["InvoiceController"] = function ($container)
+{
+    return new \App\Controller\InvoiceController($container);
+};
+
+/* Inventory controller */
 $container["InventoryController"] = function ($container)
 {
     return new \App\Controller\InventoryController($container);
