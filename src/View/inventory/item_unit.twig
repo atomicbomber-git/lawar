@@ -5,7 +5,10 @@
 
     <div class="well well-sm" style="display: flex; margin-bottom: 0px; padding: 2px 10px 2px 10px">
         <div style="flex-grow: 0">
-            <h5 style="font-weight: bold"> {% block item_index %} {{ loop.index }}. {% endblock %} {{ item.name }} </h5>
+            <h5 style="font-weight: bold">
+                {% block item_index %} {{ loop.index }}. {% endblock %} {{ item.name }}
+                (RP. {{ item.price }})
+            </h5>
         </div>
         <div style="flex-grow: 1"> </div>
         <div style="flex-grow: 0; display: flex; align-items: center">
