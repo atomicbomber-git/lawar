@@ -100,6 +100,7 @@ class InventoryController extends BaseController
 
     public function editItem ($request, $response, $args)
     {
+        $message = null;
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
@@ -144,6 +145,7 @@ class InventoryController extends BaseController
     public function type ($request, $response)
     {
         /* Retrieve messages that were stored in the session */
+        $message = null;
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
             unset( $_SESSION["message"] );

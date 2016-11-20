@@ -1,6 +1,6 @@
 {% extends 'general/base.twig' %}
 
-{% block title %} Shopping Cart {% endblock %}
+{% block title %} Tambahkan Item Ke Transaksi {% endblock %}
 
 {% block body %}
     {# Navbar #}
@@ -9,6 +9,10 @@
     <div class="container">
         <div style="height: 60px"></div>
 
-    </div>
+        {% include 'invoice/transaction_item_unit.twig' %}
+
+        <fieldset>
+            <legend></legend>
+        </fieldset>
 
 {% endblock %}
