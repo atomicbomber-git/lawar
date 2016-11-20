@@ -13,8 +13,12 @@ class Item extends Model
         return $this->belongsTo("App\Model\Type");
     }
 
+    // public function getPriceAttribute($value) {
+    //     return number_format($value, 2, ".", ",");
+    // }
+
     /* Fields that can be mass filled */
     public $fillable = [
-        "name", "description", "size", "type_id", "stock_store", "stock_warehouse"
+        "name", "description", "size", "type_id", "price", "stock_store", "stock_warehouse"
     ];
 }
