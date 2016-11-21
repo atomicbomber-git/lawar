@@ -7,12 +7,25 @@
     {% include 'general/navbar.twig'%}
 
     <div class="container">
-        <div style="height: 60px"></div>
-
-        {% include 'invoice/transaction_item_unit.twig' %}
+        <div style="height: 70px"></div>
 
         <fieldset>
-            <legend></legend>
+            <legend> Tambahkan Item ke Keranjang </legend>
+            {% include 'invoice/transaction_item_unit.twig' %}
+
+            <div class="well well-sm">
+                <form action="{{ path_for('invoice-item-process-add', {'item_id': item.id}) }}" method="POST" class="form-inline" style="text-align: right">
+                    <div class="input-group">
+                        <input min="1" name="quantity" class="form-control" type="number" required placeholder="Jumlah">
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"> </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
         </fieldset>
     </div>
 

@@ -7,7 +7,7 @@
         <div style="flex-grow: 0">
             <h5 style="font-weight: bold">
                 {% block item_index %} {{ loop.index }}. {% endblock %} {{ item.name }}
-                (RP. {{ item.price }})
+                (RP. {{ item.price | number_format(2, ',', '.') }})
             </h5>
         </div>
         <div style="flex-grow: 1"> </div>
