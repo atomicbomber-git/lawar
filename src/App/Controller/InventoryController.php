@@ -67,7 +67,6 @@ class InventoryController extends BaseController
 
     public function searchItem ($request, $response)
     {
-
         $message = null;
         if (isset($_SESSION["message"])) {
             $message = $_SESSION["message"];

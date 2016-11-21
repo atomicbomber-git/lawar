@@ -84,7 +84,7 @@ class AuthenticationController extends BaseController
 
     public function signup ($request, $response)
     {
-
+        $message = null;
         if ( isset($_SESSION["message"]["error"] ) ) {
             $message["error"] = $_SESSION["message"]["error"];
             unset( $_SESSION["message"]["error"] );
