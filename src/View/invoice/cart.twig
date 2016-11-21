@@ -9,6 +9,7 @@
         }
 
         p.header {
+            margin-top: 8px;
             font-weight: bold;
         }
 
@@ -35,16 +36,43 @@
             <ul class="list-group">
             {% for item in cart %}
                 <li class="list-group-item">
-                    <div class="well well-sm">
-                        <h5> {{ item.name }} ({{ item.size }}) - {{ item.type }} </h5>
+
+                    <div class="well well-sm" style="display: flex">
+                        <div style="flex-grow: 0">
+                            <h5 style="font-weight: bold">
+                                {{ item.name }} ({{ item.size }}) - {{ item.type }}
+                            </h5>
+                        </div>
+
+                        <div style="flex-grow: 1"> </div>
+
+                        {# Item Controls #}
+                        <div style="flex-grow: 0; display: flex; align-items: center">
+                            <a class="btn btn-warning btn-xs" style="margin: 0px 2px 0px 2px">
+                                <span class="glyphicon glyphicon-cog"> </span>
+                            </a>
+                            <a class="btn btn-danger btn-xs" style="margin: 0px 2px 0px 2px">
+                                <span class="glyphicon glyphicon-remove"> </span>
+                            </a>
+                        </div>
                     </div>
+
                     <p class="header"> Qty. Toko: </p>
-                    <p> {{ item.stock_store }} </p>
+                    <p> <span class="label label-default"> {{ item.stock_store }} Item </span> </p>
                     <p class="header"> Qty. Gudang: </p>
-                    <p> {{ item.stock_warehouse }} </p>
+                    <p> <span class="label label-default"> {{ item.stock_warehouse }} Item </span> </p>
                     <p class="header"> Qty. Total * Harga: </p>
-                    <p> {{ item.stock_store + item.stock_warehouse }} * Rp. {{ item.price | number_format(2, '.', ',') }} = 
-                        <label class="label label-success"> Rp. {{ ((item.stock_store + item.stock_warehouse) * item.price) | number_format(2, '.', ',') }} </label>
+                    <p> 
+                        <span class="label label-default">
+                            {{ item.stock_store + item.stock_warehouse }} Item
+                            *
+                            Rp. {{ item.price | number_format(2, '.', ',') }}
+                            =
+                        </span>
+
+                        <span class="label label-success">
+                            Rp. {{ ((item.stock_store + item.stock_warehouse) * item.price) | number_format(2, '.', ',') }}
+                        </span>
                     </p>
                 </li>
             {% endfor %}
@@ -55,7 +83,10 @@
             </div>
 
             <div style="text-align: right; padding: 10px">
-                <a class="btn btn-primary">
+                <a href="{{ path_for('inventory') }}" class="btn btn-default">
+                    Kembali
+                </a>
+                <a href="{{ path_for('cart-finish') }}" class="btn btn-primary">
                     Setujui Transaksi
                     <span class="glyphicon glyphicon-ok"> </span>
                 </a>

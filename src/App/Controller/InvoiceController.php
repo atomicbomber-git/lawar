@@ -8,7 +8,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class InvoiceController extends BaseController
 {
-    public function cart($request, $response)
+    public function cartDisplay($request, $response)
     {
         $message = null;
         /* Retrieve messages that were stored in the session */
@@ -23,6 +23,12 @@ class InvoiceController extends BaseController
             ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
 
         return $this->view->render($response, "invoice/cart.twig", ["cart" => $cart, "sum" => $sum, "message" => $message]);
+    }
+
+    public function cartFinish() {
+        $transaction = Transaction::find($_SESSION["cart_id"]);
+        $transaction->is_finished = true;
+        $transaction->save();
     }
 
     public function addTransactionItem ($request, $response, $args)

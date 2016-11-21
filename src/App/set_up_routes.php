@@ -40,7 +40,8 @@ $app->group("/inventory", function () {
     $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
 
     /* Routes pertaining the shopping cart functionality */
-    $this->get("/cart", "InvoiceController:cart")->setName("cart");
+    $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
+    $this->get("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
     $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
 
