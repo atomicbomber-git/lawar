@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Model\Clerk;
+use App\Model\Transaction;
 use PHPassLib\Hash\BCrypt;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
@@ -44,8 +45,7 @@ class AuthenticationController extends BaseController
         }
 
         /* Retrieve clerk data based on username */
-        $clerk = Clerk::select("username", "password")
-            ->whereRaw("BINARY username = '$data[username]'")
+        $clerk = Clerk::whereRaw("BINARY username = '$data[username]'")
             ->first();
 
         if ( ! $clerk ) {
@@ -64,10 +64,31 @@ class AuthenticationController extends BaseController
                 ->withHeader('Location', $path);
         }
 
+        /* Attempt to find a cart registered to this clerk that hasn't been finished */
+        $cart = Transaction::where("clerk_id", $clerk->id)
+            ->where("is_finished", 0)
+            ->first();
+
+        if ( ! $cart ) {
+
+            /* Creates a new Transaction object which represents this clerk's current empty shopping cart */
+            $cart = new Transaction([
+                "customer_name" => "",
+                "customer_phone" => "",
+                "datetime" => date("Y-m-d H-i-s"),
+                "clerk_id" => $clerk->id,
+                "is_finished" => 0
+            ]);
+
+            $cart->save();
+        }
+
         /* Mark the user as logged in */
         $_SESSION["is_logged_in"] = true;
+        $_SESSION["user_id"] = $clerk->id;
+        $_SESSION["card_id"] = $cart->id;
 
-        $path = $this->container->get("router")->pathFor("inventory");
+        $path = $this->router->pathFor("inventory");
 
         return $response
             ->withStatus(302)
