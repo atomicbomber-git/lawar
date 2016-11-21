@@ -67,7 +67,7 @@ class InventoryController extends BaseController
 
     public function searchItem ($request, $response)
     {
-
+        $message = null;
         if (isset($_SESSION["message"])) {
             $message = $_SESSION["message"];
             unset($_SESSION["message"]);
@@ -78,6 +78,7 @@ class InventoryController extends BaseController
 
     public function addItem ($request, $response)
     {
+        $message = null;
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
