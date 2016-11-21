@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\TransactionItem;
 use App\Model\Transaction;
 use App\Model\Item;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class InvoiceController extends BaseController
 {
@@ -16,7 +17,12 @@ class InvoiceController extends BaseController
             unset( $_SESSION["message"] );
         }
 
-        return $this->view->render($response, "invoice/cart.twig", ["message" => $message]);
+        $cart = TransactionItem::where("transaction_id", $_SESSION["cart_id"])->get();
+
+        $sum = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
+
+        return $this->view->render($response, "invoice/cart.twig", ["cart" => $cart, "sum" => $sum, "message" => $message]);
     }
 
     public function addTransactionItem ($request, $response, $args)
@@ -66,6 +72,6 @@ class InvoiceController extends BaseController
         /* Store messages */
         $_SESSION["message"]["success"]["add"] = "Berhasil menambahkan item!";
 
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart") . "#message");
     }
 }
