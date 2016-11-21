@@ -11,7 +11,8 @@
         "illuminate/database": "^5.2",
         "guzzlehttp/guzzle": "^6.2",
         "rych/phpass": "3.0.*@beta",
-        "jenssegers/date": "^3.2"
+        "jenssegers/date": "^3.2",
+        "respect/validation": "^1.1"
     }
 
 }

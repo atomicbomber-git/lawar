@@ -86,7 +86,7 @@ class AuthenticationController extends BaseController
         /* Mark the user as logged in */
         $_SESSION["is_logged_in"] = true;
         $_SESSION["user_id"] = $clerk->id;
-        $_SESSION["card_id"] = $cart->id;
+        $_SESSION["cart_id"] = $cart->id;
 
         $path = $this->router->pathFor("inventory");
 
