@@ -22,8 +22,16 @@ class InvoiceController extends BaseController
         return $this->view->render($response, "invoice/cart.twig");
     }
 
-    public function addTransactionItem($request, $response, $args) {
+    public function addTransactionItem ($request, $response, $args)
+    {
         $item = Item::find($args["item_id"]);
         return $this->view->render($response, "invoice/add_transaction_item.twig", ["item" => $item]);
+    }
+
+    public function processAddTransactionItem ($reques, $response, $args)
+    {
+
+        $item = Item::find();
+
     }
 }

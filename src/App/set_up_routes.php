@@ -43,6 +43,6 @@ $app->group("/inventory", function () {
     $this->get("/cart", "InvoiceController:cart")->setName("cart");
 
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
-    $this->post("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-process-add");
+    $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
 
 })->add($auth_middleware);
