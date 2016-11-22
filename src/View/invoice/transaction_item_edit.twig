@@ -1,0 +1,43 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Sunting Item Transaksi "{{ item.name }}" {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div style="height: 70px"></div>
+        <fieldset>
+            <legend> Sunting Item Transaksi "{{ item.name }}"  </legend>
+            <div style="margin-bottom: 30px">
+                <span style="margin-right: 4px" class="label label-success"> Tipe: {{ item.type }} </span>
+                <span style="margin-right: 4px" class="label label-success"> Ukuran: {{ item.size }} </span>
+                <span style="margin-right: 4px" class="label label-success"> Harga: Rp. {{ item.price | number_format('2', '.', ',') }} </span>
+            </div>
+
+            <form action="{{ path_for('invoice-item-process-edit', {'item_id': item.id}) }}" method="POST">
+                <div class="form-group {% if message.error.stock_store %} has-error {% endif %}">
+                    <label class="control-label"> Ambil dari Toko (Stok: {{ item.orig_stock_store }}): </label>
+                    <input class="form-control" value="{{ item.stock_store }}" name="stock_store" placeholder="Dari toko">
+                    {% if message.error.stock_store %}
+                        <span class="help-block">  {{ message.error.stock_store }} </span>
+                    {% endif %}
+                </div>
+                <div class="form-group {% if message.error.stock_warehouse %} has-error {% endif %}">
+                    <label class="control-label"> Ambil dari Gudang (Stok: {{ item.orig_stock_warehouse }}): </label>
+                    <input class="form-control" value="{{ item.stock_warehouse }}" name="stock_warehouse" placeholder="Dari gudang">
+                    {% if message.error.stock_warehouse %}
+                        <span class="help-block">  {{ message.error.stock_warehouse }} </span>
+                    {% endif %}
+                </div>
+
+                <div style="text-align: right">
+                    <a class="btn btn-secondary" href="{{ path_for("cart") }}"> Kembali </a>
+                    <button class="btn btn-primary"> Ubah </button>
+                </div>
+            </form>
+        </fieldset>
+        
+    </div>
+{% endblock %}

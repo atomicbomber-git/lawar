@@ -39,10 +39,16 @@ $app->group("/inventory", function () {
     $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
     $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
 
-    /* Routes pertaining the shopping cart functionality */
+    /* --Routes pertaining the shopping cart functionality-- */
+    /* These routes deal with the current active shopping cart / invoice */
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
     $this->get("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
+    $this->get("/transaction_item/delete/{item_id}", "InvoiceController:deleteTransactionItem")->setName("invoice-item-delete");
+
+    /* These routes apply universally to any TransactionItems*/
+    $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
+    $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
     $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
 
 })->add($auth_middleware);

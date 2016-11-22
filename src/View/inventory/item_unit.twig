@@ -24,10 +24,10 @@
     </div>
 
     <div style="padding: 7px">
-        <span style="display: inline-block" class="label label-default"> {{ item.size | upper }} </span>
-        <span style="display: inline-block" class="label label-info"> {{ item.type.name | upper }} </span>
-        <span style="display: inline-block" class="label label-success"> Toko: {{ item.stock_store | upper }} </span>
-        <span style="display: inline-block" class="label label-danger"> Gudang: {{ item.stock_warehouse | upper }} </span>
+        <span style="display: inline-block" class="label label-default"> Ukuran: {{ item.size | upper }} </span>
+        <span style="display: inline-block" class="label label-default"> Tipe: {{ item.type.name | upper }} </span>
+        <span style="display: inline-block" class="label label-default"> Toko: {{ item.stock_store | upper }} </span>
+        <span style="display: inline-block" class="label label-default"> Gudang: {{ item.stock_warehouse | upper }} </span>
             
         <p style="margin-top: 15px">
             {% if item.description %}
