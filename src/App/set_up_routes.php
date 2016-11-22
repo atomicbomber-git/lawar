@@ -43,6 +43,9 @@ $app->group("/inventory", function () {
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
     $this->get("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
+    $this->get("/transaction_item/delete/{item_id}", "InvoiceController:deleteTransactionItem")->setName("invoice-item-delete");
+    $this->get("/transaction_item/edit/{item_id}", "InvoiceController:deleteTransactionItem")->setName("invoice-item-edit");
+    $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
     $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
 
 })->add($auth_middleware);

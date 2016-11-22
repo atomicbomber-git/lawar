@@ -10,19 +10,53 @@ class InvoiceController extends BaseController
 {
     public function cartDisplay($request, $response)
     {
-        $message = null;
         /* Retrieve messages that were stored in the session */
+        $message = null;
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
             unset( $_SESSION["message"] );
         }
 
-        $cart = TransactionItem::where("transaction_id", $_SESSION["cart_id"])->get();
+        $cart = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
+            ->select(
+                    "transaction_items.item_id AS item_id",
+                    "transaction_items.transaction_id AS transaction_id",
+                    "transaction_items.name AS name",
+                    "transaction_items.type AS type",
+                    "transaction_items.size AS size",
+                    "transaction_items.stock_warehouse AS stock_warehouse",
+                    "transaction_items.stock_store AS stock_store",
+                    "items.stock_warehouse AS orig_stock_warehouse",
+                    "items.stock_store AS orig_stock_store"
+                )
+            ->having("transaction_id", "=", $_SESSION["cart_id"])
+            ->get();
 
+        /* Calculate total sum (sum of price * quantity) */
         $sum = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
             ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
 
-        return $this->view->render($response, "invoice/cart.twig", ["cart" => $cart, "sum" => $sum, "message" => $message]);
+        /* Check if there exists transaction items which quantities are more than the currently available stock */
+        $count_error = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
+            ->select(Capsule::raw("
+                items.stock_store - transaction_items.stock_store AS diff_stock_store,
+                items.stock_warehouse - transaction_items.stock_warehouse AS diff_stock_warehouse
+            "))
+            ->where("transaction_items.transaction_id", "=", $_SESSION["cart_id"])
+            ->havingRaw("diff_stock_store < 0 OR diff_stock_warehouse")
+            ->first();
+
+        /* There's an error in our cart if there exists transaction items which quantity is larger than what's available in
+            stock
+        */
+        $is_error = false;
+        if ( $count_error ) { $is_error = true; } 
+
+        return $this->view->render(
+            $response,
+            "invoice/cart.twig",
+            ["cart" => $cart, "sum" => $sum, "message" => $message, "is_error" => $is_error]
+        );
     }
 
     public function cartFinish() {
@@ -79,5 +113,10 @@ class InvoiceController extends BaseController
         $_SESSION["message"]["success"]["add"] = "Berhasil menambahkan item!";
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart") . "#message");
+    }
+
+    public function deleteTransactionItem ($request, $response, $args)
+    {
+        // $transaction_item = 
     }
 }
