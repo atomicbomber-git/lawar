@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\Item;
 use App\Model\Type;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
@@ -91,12 +92,35 @@ class InventoryController extends BaseController
 
     public function processAddItem ($request, $response)
     {
+        $data = $request->getParsedBody();
+
+        /* Validate data */
+        $has_error = false;
+        if ( ! V::numeric()->positive()->validate($data["price"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["price"] = "Data wajib diisi dan wajib berupa angka positif";
+        }
+
+        if ( ! V::numeric()->min(0)->validate($data["stock_store"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["stock_store"] = "Data minimal bernilai 0";
+        } 
+
+        if ( ! V::numeric()->min(0)->validate($data["stock_warehouse"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["stock_warehouse"] = "Data minimal bernilai 0";
+        } 
+
+        if ($has_error) {
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
+        }
+
         $item = new Item( $request->getParsedBody() );
         $item->save();
 
         $_SESSION["message"]["success"]["add"] = "Item '$item->name' berhasil ditambahkan!";
 
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add") . "#message");
     }
 
     public function editItem ($request, $response, $args)
