@@ -19,6 +19,7 @@ class InvoiceController extends BaseController
 
         $cart = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
             ->select(
+                    "transaction_items.id AS id",
                     "transaction_items.item_id AS item_id",
                     "transaction_items.transaction_id AS transaction_id",
                     "transaction_items.name AS name",
@@ -117,6 +118,8 @@ class InvoiceController extends BaseController
 
     public function deleteTransactionItem ($request, $response, $args)
     {
-        // $transaction_item = 
+        $transaction_item = TransactionItem::find($args["item_id"]);
+        $transaction_item->delete();
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
     }
 }

@@ -48,10 +48,10 @@
 
                         {# Item Controls #}
                         <div style="flex-grow: 0; display: flex; align-items: center">
-                            <a href="" class="btn btn-success btn-xs" style="margin: 0px 2px 0px 2px">
+                            <a href="{{ path_for('invoice-item-edit', {'item_id': transaction_item.id }) }}" class="btn btn-success btn-xs" style="margin: 0px 2px 0px 2px">
                                 <span class="glyphicon glyphicon-cog"> </span>
                             </a>
-                            <a href="{{ path_for() }}" class="btn btn-danger btn-xs" style="margin: 0px 2px 0px 2px">
+                            <a href="{{ path_for('invoice-item-delete', {'item_id': transaction_item.id }) }}" class="btn btn-danger btn-xs" style="margin: 0px 2px 0px 2px">
                                 <span class="glyphicon glyphicon-remove"> </span>
                             </a>
                         </div>
@@ -101,6 +101,12 @@
             <div style="text-align: right">
                 <h3> Total: Rp. {{ sum | number_format(2, '.', ',') }} </h3>
             </div>
+
+            {% if is_error %}
+                <div class="alert alert-danger">
+                    Transaksi tidak dapat dilanjutkan selama terdapat item pesanan yang jumlahnya melebihi stok
+                </div>
+            {% endif %}
 
             <div style="text-align: right; padding: 10px">
                 <a href="{{ path_for('inventory') }}" class="btn btn-default">
