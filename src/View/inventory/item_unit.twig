@@ -3,15 +3,15 @@
         
     </div>
 
-    <div class="well well-sm" style="display: flex; margin-bottom: 0px; padding: 2px 10px 2px 10px">
-        <div style="flex-grow: 0">
+    <div class="well well-sm item-unit" style="padding: 2px 10px 2px 10px">
+        <div>
             <h5 style="font-weight: bold">
-                {% block item_index %} {{ loop.index }}. {% endblock %} {{ item.name }}
+                {% block item_index %} {% endblock %} {{ item.name }}
                 (RP. {{ item.price | number_format(2, ',', '.') }})
             </h5>
         </div>
-        <div style="flex-grow: 1"> </div>
-        <div style="flex-grow: 0; display: flex; align-items: center">
+        <div> </div>
+        <div style="align-items: center">
             {% block control_manage %}
                 <a style="margin: 0px 2px 0px 2px" href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs align-bottom">
                 <span class="glyphicon glyphicon-cog"></span>

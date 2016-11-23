@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Model\Item;
 use App\Model\Type;
+use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Respect\Validation\Validator as V;
 
@@ -236,5 +237,35 @@ class InventoryController extends BaseController
         $type->delete();
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("type"));
+    }
+
+    public function cashRegister ($request, $response)
+    {
+        $cash_history = CashHistory::get();
+
+        return $this->view->render($response, "inventory/cash_register.twig", ["cash_history" => $cash_history]);
+    }
+
+    public function addCashHistory ($request, $response)
+    { 
+        $data = $request->getParsedBody();
+
+        /* TODO: Validation */
+
+        $amount = $data["amount"];
+        /* Amount out is negative if we're taking money from the register */
+        if ($data["is_out"]) {
+            $amount *= -1;
+        }
+
+        $cash_history = new CashHistory([
+            "amount" => $amount,
+            "description" => $data["description"],
+            "clerk_id" => $_SESSION["user_id"],
+        ]);
+
+        $cash_history->save();
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
     }
 }

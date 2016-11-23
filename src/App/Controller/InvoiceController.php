@@ -16,6 +16,14 @@ class InvoiceController extends BaseController
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
             unset( $_SESSION["message"] );
+
+        }
+
+        /* Retrieve persisted form field values */
+        $persisted = null;
+        if ( isset($_SESSION["persisted"] ) ) {
+            $persisted = $_SESSION["persisted"];
+            unset( $_SESSION["persisted"] );
         }
 
         $cart = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
@@ -58,15 +66,35 @@ class InvoiceController extends BaseController
         return $this->view->render(
             $response,
             "invoice/cart.twig",
-            ["cart" => $cart, "sum" => $sum, "message" => $message, "is_error" => $is_error]
+            ["cart" => $cart, "sum" => $sum, "message" => $message, "persisted" => $persisted, "is_error" => $is_error]
         );
     }
 
     public function cartFinish($request, $response) {
+        $data = $request->getParsedBody();
+
+        /* ---Validate data--- */
+        $has_error = false;
+
+        /* Calculate total sum (sum of price * quantity) */
+        $sum = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
+
+        /* Validate the amount_paid field */
+        if ( ! V::numeric()->min($sum)->validate($data["amount_paid"]) ) {
+            $has_error = true;
+            $formatted_sum = number_format($sum, 2, ",", ".");
+            $_SESSION["message"]["form_error"]["amount_paid"] = "Jumlah uang yang dibayar tidak boleh kurang dari Rp. $formatted_sum.";
+        }
+
+        if ($has_error) {
+            /* Persist previous form data */
+            $_SESSION["persisted"]["amount_paid"] = $data["amount_paid"];
+
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
+        }
 
 
-        /* TODO: Check if invoice is valid */
-        
         /* ---Substract all stock by the amount of purchased items--- */
 
         /* Retrieve purchased items */

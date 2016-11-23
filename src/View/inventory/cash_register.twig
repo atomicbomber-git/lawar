@@ -1,0 +1,58 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Kasir {% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+
+        <div style="height: 60px"></div>
+
+        <fieldset>
+            <legend> Tambahkan / Kurangi Uang dari Kasir </legend>
+
+            <form action="{{ path_for('cash_register-add_history') }}" method="POST">
+                <div class="form-group">
+                    <label class="control-label"> Jumlah Uang: </label>
+                    <input name="amount" class="form-control" type="number" placeholder="Jumlah uang">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"> Keluar / Masuk: </label>
+
+                    <div class="form-check">
+
+                        <div class="form-check-label">
+                            <input name="is_out" value="1" type="radio" checked>
+                            Keluar
+                        </div>
+
+                        <div class="form-check-label">
+                            <input name="is_out" value="0" type="radio">
+                            Masuk
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label"> Penjelasan: </label>
+                    <textarea name="description" class="form-control" placeholder="Alasan pemasukan / pengeluaran uang"></textarea>
+                </div>
+
+                <div class="form-group" style="text-align: right">
+                    <a class="btn btn-secondary"> Kembali </a>
+                    <button class="btn btn-primary">
+                        Setujui
+                        <span class="glyphicon glyphicon-ok"> </span>
+                    </button>
+                </div>
+
+            </form>
+        </fieldset>
+
+    </div>
+    
+{% endblock %}

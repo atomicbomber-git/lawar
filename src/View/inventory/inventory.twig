@@ -2,6 +2,29 @@
 
 {% block title %} Inventory | Semua Item {% endblock %}
 
+{% block head_extra %}
+    <style>
+
+        .item-unit {
+            display: table;
+            width: 100%;
+        }
+
+        .item-unit div {
+            display: table-cell;
+        }
+
+        .item-unit div:nth-child(1) {
+            width: 70%;
+        }
+
+        .item-unit div:nth-child(3) {
+            text-align: right;
+        }
+
+    </style>
+{% endblock %}
+
 {% block body %}
 {# Navigation Bar #}
     {% include 'general/navbar.twig' %}
