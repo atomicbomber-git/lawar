@@ -1,6 +1,9 @@
 <?php
 /* Expects $app, an instance of Slim\App */
+
 use App\Controller\AuthenticationController;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 $container = $app->getContainer();
 
@@ -12,6 +15,14 @@ $container['view'] = function ($container) {
     ));
 
     return $view;
+};
+
+/* Monolog logger */
+$container["logger"] = function ($container) use ($WEB_ROOT)
+{
+    $logger = new Logger("lawar_shop_logger");
+    $logger->pushHandler(new StreamHandler("$WEB_ROOT/log/lawar_shop_web.log", Logger::DEBUG));
+    return $logger;
 };
 
 /* Authentication controller */
