@@ -1,7 +1,7 @@
 <?php
 namespace App\Middleware;
 
-class AuthMiddleware
+class LoggedInMiddleware
 {
     public function __construct($container)
     {
