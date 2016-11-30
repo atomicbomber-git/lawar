@@ -37,11 +37,5 @@
     </div>
 
     {% block control_add %}
-        <div style="text-align: right">
-            <a href="{{ path_for('invoice-item-add', {'item_id': item.id}) }}" class="btn btn-xs {% if (not item.stock_warehouse) and (not item.stock_store)  %} disabled btn-default {% else %} btn-primary {% endif %}">
-                Tambahkan
-                <span class="glyphicon glyphicon-plus"></span>
-            </a>
-        </div>
     {% endblock %}
 </li>

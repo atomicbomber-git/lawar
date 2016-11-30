@@ -1,6 +1,6 @@
 {% extends 'general/base.twig' %}
 
-{% block title %} Edit Item No. {{ item.id }} {% endblock %}
+{% block title %} Edit Item  "{{ item.name }}" {% endblock %}
 
 {% block body %}
     {# Navigation Bar #}
@@ -9,7 +9,7 @@
     <div class="container">
         <div class="spacer"></div>
         <fieldset>
-            <legend> Sunting Item No. {{ item.id }} </legend>
+            <legend> Sunting Item "{{ item.name }}" </legend>
         </fieldset>
         <form action="{{ path_for('inventory-item-process-edit', {'item_id': item.id}) }}" method="POST">
             <div class="form-group">

@@ -9,6 +9,11 @@ use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
+    public function home ($request, $response)
+    {
+        return $this->view->render($response, "inventory/home.twig");
+    }
+
     public function all ($request, $response)
     {
         $items = Item::get();
@@ -65,17 +70,6 @@ class InventoryController extends BaseController
         }
 
         return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
-    }
-
-    public function searchItem ($request, $response)
-    {
-        $message = null;
-        if (isset($_SESSION["message"])) {
-            $message = $_SESSION["message"];
-            unset($_SESSION["message"]);
-        }
-
-        return $this->view->render($response, "inventory/item_search.twig", ["message" => $message]);
     }
 
     public function addItem ($request, $response)
@@ -147,10 +141,7 @@ class InventoryController extends BaseController
         $item = Item::find($args["item_id"]);
         $item->update( $request->getParsedBody() );
 
-        /* Success message to be displayed on the edit page! */
-        $_SESSION["message"]["success"]["edit"] = "Data berhasil diubah!";
-
-        $path = $this->router->pathFor("inventory-item-edit", ["item_id" => $args["item_id"]]);
+        $path = $this->router->pathFor("inventory");
         return $response->withStatus(302)->withHeader("Location", $path);
     }
 
