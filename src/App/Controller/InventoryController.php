@@ -3,10 +3,17 @@ namespace App\Controller;
 
 use App\Model\Item;
 use App\Model\Type;
+use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
+    public function home ($request, $response)
+    {
+        return $this->view->render($response, "inventory/home.twig");
+    }
+
     public function all ($request, $response)
     {
         $items = Item::get();
@@ -65,17 +72,6 @@ class InventoryController extends BaseController
         return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
     }
 
-    public function searchItem ($request, $response)
-    {
-        $message = null;
-        if (isset($_SESSION["message"])) {
-            $message = $_SESSION["message"];
-            unset($_SESSION["message"]);
-        }
-
-        return $this->view->render($response, "inventory/item_search.twig", ["message" => $message]);
-    }
-
     public function addItem ($request, $response)
     {
         $message = null;
@@ -91,12 +87,35 @@ class InventoryController extends BaseController
 
     public function processAddItem ($request, $response)
     {
+        $data = $request->getParsedBody();
+
+        /* Validate data */
+        $has_error = false;
+        if ( ! V::numeric()->positive()->validate($data["price"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["price"] = "Data wajib diisi dan wajib berupa angka positif";
+        }
+
+        if ( ! V::numeric()->min(0)->validate($data["stock_store"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["stock_store"] = "Data minimal bernilai 0";
+        } 
+
+        if ( ! V::numeric()->min(0)->validate($data["stock_warehouse"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["stock_warehouse"] = "Data minimal bernilai 0";
+        } 
+
+        if ($has_error) {
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
+        }
+
         $item = new Item( $request->getParsedBody() );
         $item->save();
 
         $_SESSION["message"]["success"]["add"] = "Item '$item->name' berhasil ditambahkan!";
 
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add") . "#message");
     }
 
     public function editItem ($request, $response, $args)
@@ -122,10 +141,7 @@ class InventoryController extends BaseController
         $item = Item::find($args["item_id"]);
         $item->update( $request->getParsedBody() );
 
-        /* Success message to be displayed on the edit page! */
-        $_SESSION["message"]["success"]["edit"] = "Data berhasil diubah!";
-
-        $path = $this->router->pathFor("inventory-item-edit", ["item_id" => $args["item_id"]]);
+        $path = $this->router->pathFor("inventory");
         return $response->withStatus(302)->withHeader("Location", $path);
     }
 
@@ -212,5 +228,35 @@ class InventoryController extends BaseController
         $type->delete();
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("type"));
+    }
+
+    public function cashRegister ($request, $response)
+    {
+        $cash_history = CashHistory::get();
+
+        return $this->view->render($response, "inventory/cash_register.twig", ["cash_history" => $cash_history]);
+    }
+
+    public function addCashHistory ($request, $response)
+    { 
+        $data = $request->getParsedBody();
+
+        /* TODO: Validation */
+
+        $amount = $data["amount"];
+        /* Amount out is negative if we're taking money from the register */
+        if ($data["is_out"]) {
+            $amount *= -1;
+        }
+
+        $cash_history = new CashHistory([
+            "amount" => $amount,
+            "description" => $data["description"],
+            "clerk_id" => $_SESSION["user_id"],
+        ]);
+
+        $cash_history->save();
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
     }
 }

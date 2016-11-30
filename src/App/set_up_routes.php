@@ -1,9 +1,9 @@
 <?php
+
 /* Expects an instance of Slim\App */
-use App\Middleware\AuthMiddleware;
+use App\Middleware\LoggedInMiddleware;
 
 $container = $app->getContainer();
-$auth_middleware = new AuthMiddleware($container);
 
 /* Redirect "/" to "/login" */
 $app->get("/", function ($request, $response) {
@@ -19,13 +19,16 @@ $app->get("/signup", "AuthenticationController:signup")->setName("signup");
 $app->post("/signup", "AuthenticationController:processSignup");
 
 $app->group("/inventory", function () {
-    $this->get("", "InventoryController:all")->setName("inventory");
+
+    /* Home and all inventory items */
+    $this->get("/home", "InventoryController:home")->setName("home");
+    $this->get("/all", "InventoryController:all")->setName("inventory");
     $this->get("/filtered", "InventoryController:filtered")->setName("inventory-filtered");
+    $this->get("/search", "InventoryController:searchItem")->setName("inventory-item-search");
 
     /* Routes pertaining the item management functionality */
     $this->get("/item/add", "InventoryController:addItem")->setName("inventory-item-add");
     $this->post("/item/add", "InventoryController:processAddItem")->setName("inventory-item-process-add");
-    $this->get("/item/search", "InventoryController:searchItem")->setName("inventory-item-search");
     $this->get("/item/edit/{item_id}", "InventoryController:editItem")->setName("inventory-item-edit");
     $this->post("/item/edit/{item_id}", "InventoryController:processEditItem")->setName("inventory-item-process-edit");
     $this->get("/item/delete/{item_id}", "InventoryController:deleteItem")->setName("inventory-item-delete");
@@ -38,11 +41,13 @@ $app->group("/inventory", function () {
     $this->post("/type/edit/{type_id}", "InventoryController:processEditType")->setName("inventory-type-process-edit");
     $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
     $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
+    $this->get("/cash_register", "InventoryController:cashRegister")->setName("cash_register");
+    $this->post("/cash_register/add_history", "InventoryController:addCashHistory")->setName("cash_register-add_history");
 
     /* --Routes pertaining the shopping cart functionality-- */
     /* These routes deal with the current active shopping cart / invoice */
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
-    $this->get("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
+    $this->post("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
     $this->get("/transaction_item/delete/{item_id}", "InvoiceController:deleteTransactionItem")->setName("invoice-item-delete");
 
@@ -51,4 +56,5 @@ $app->group("/inventory", function () {
     $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
     $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
 
-})->add($auth_middleware);
+
+})->add(new LoggedInMiddleware($container));

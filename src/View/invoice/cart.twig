@@ -21,6 +21,24 @@
             margin: 2px;
             font-weight: bold;
         }
+
+        .item-unit {
+            display: table;
+            width: 100%;
+        }
+
+        .item-unit div {
+            display: table-cell;
+        }
+
+        .item-unit div:nth-child(1) {
+            width: 70%;
+        }
+
+        .item-unit div:nth-child(3) {
+            text-align: right;
+        }
+
     </style>
 {% endblock %}
 
@@ -37,17 +55,17 @@
             {% for transaction_item in cart %}
                 <li class="list-group-item">
 
-                    <div class="well well-sm" style="display: flex">
-                        <div style="flex-grow: 0">
+                    <div class="well well-sm item-unit" style="display: flex">
+                        <div>
                             <h5 style="font-weight: bold">
                                 {{ transaction_item.name }} ({{ transaction_item.size }}) - {{ transaction_item.type }}
                             </h5>
                         </div>
 
-                        <div style="flex-grow: 1"> </div>
+                        <div> </div>
 
                         {# Item Controls #}
-                        <div style="flex-grow: 0; display: flex; align-items: center">
+                        <div>
                             <a href="{{ path_for('invoice-item-edit', {'item_id': transaction_item.id }) }}" class="btn btn-success btn-xs" style="margin: 0px 2px 0px 2px">
                                 <span class="glyphicon glyphicon-cog"> </span>
                             </a>
@@ -98,7 +116,7 @@
             {% endfor %}
             </ul>
 
-            <div style="text-align: right">
+            <div style="text-align: right; font-weight: bold">
                 <h3> Total: Rp. {{ sum | number_format(2, '.', ',') }} </h3>
             </div>
 
@@ -108,14 +126,23 @@
                 </div>
             {% endif %}
 
-            <div style="text-align: right; padding: 10px">
-                <a href="{{ path_for('inventory') }}" class="btn btn-default">
-                    Kembali
-                </a>
-                <a href="{{ path_for('cart-finish') }}" class="btn {% if is_error %} btn-danger disabled {% else %} btn-primary {% endif %}">
-                    Setujui Transaksi
-                </a>
-            </div>
+            <form action="{{ path_for('cart-finish') }}" method="POST">
+                <div class="form-group {% if message.form_error.amount_paid %} has-error {% endif %}">
+                    <label class="control-label"> Uang Pembayaran: </label>
+                    <input class="form-control" name="amount_paid" type="number" placeholder="Uang pembayaran" value="{{ persisted.amount_paid }}">
+                    {% if message.form_error.amount_paid %} <span class="help-block"> {{ message.form_error.amount_paid }} </span> {% endif %}
+                </div>
+
+                <div style="text-align: right">
+                    <a href="{{ path_for('inventory') }}" class="btn btn-secondary">
+                        Kembali
+                    </a>
+                    <button class="btn {% if is_error %} btn-danger disabled {% else %} btn-primary {% endif %}">
+                        Setujui Transaksi
+                        {% if not is_error %} <span class="glyphicon glyphicon-ok"> </span> {% endif %}
+                    </button>
+                </div>
+            </form>
 
             <div id="message">
                 {% include 'general/message_alert.twig' %}

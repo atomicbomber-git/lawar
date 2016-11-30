@@ -13,12 +13,6 @@
         <div> </div>
         <div style="align-items: center">
             {% block control_manage %}
-                <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs align-bottom">
-                <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs align-bottom">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </a>
             {% endblock %}
         </div>
     </div>
