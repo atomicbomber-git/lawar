@@ -83,10 +83,10 @@ class AuthenticationController extends BaseController
             $cart->save();
         }
 
-        /* Mark the user as logged in */
-        $_SESSION["is_logged_in"] = true;
-        $_SESSION["user_id"] = $clerk->id;
-        $_SESSION["cart_id"] = $cart->id;
+        /* Store the user data in the session. Will be used later to determine if
+            the user has been logged in in his current session
+         */
+        $_SESSION["user"] = $clerk;
 
         $path = $this->router->pathFor("inventory");
 
@@ -97,7 +97,8 @@ class AuthenticationController extends BaseController
 
     public function logout ($request, $response)
     {
-        $_SESSION["is_logged_in"] = false;
+        session_destroy();
+
         return $response
             ->withStatus(302)
             ->withHeader('Location', $this->router->pathFor("login"));

@@ -12,8 +12,8 @@ class LoggedInMiddleware
     public function __invoke ($request, $response, $next)
     {
         /* Check if the user has been logged in */
-        if ( ! $_SESSION["is_logged_in"] ) {
-            $path = $this->container->get("router")->pathFor("login");
+        if ( ! $_SESSION["user"] ) {
+            $path = $this->router->pathFor("login");
 
             /* Indicates that an error has occured */
             $_SESSION["message"]["error"]["must_log_in"] = true;
