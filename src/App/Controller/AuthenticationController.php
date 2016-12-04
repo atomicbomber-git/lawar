@@ -88,7 +88,11 @@ class AuthenticationController extends BaseController
          */
         $_SESSION["user"] = $clerk;
 
-        $path = $this->router->pathFor("inventory");
+        /* Cart id is stored so it can be used later to determine which cart the user currently has */
+        $_SESSION["cart_id"] = $cart->id;
+
+
+        $path = $this->router->pathFor("home");
 
         return $response
             ->withStatus(302)

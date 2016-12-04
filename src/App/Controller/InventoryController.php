@@ -31,7 +31,7 @@ class InventoryController extends BaseController
         if ( !$keyword && $keyword !== "0" ) {
             /* The keyword query must not be empty. */
             $_SESSION["message"]["error"]["keyword"] = "Error: Kata kunci tidak boleh kosong.";
-            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-search"));
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("home"));
         }
 
         if ($filter_type !== "type") {
@@ -252,7 +252,7 @@ class InventoryController extends BaseController
         $cash_history = new CashHistory([
             "amount" => $amount,
             "description" => $data["description"],
-            "clerk_id" => $_SESSION["user_id"],
+            "clerk_id" => $_SESSION["user"]->id,
         ]);
 
         $cash_history->save();

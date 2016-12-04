@@ -61,7 +61,7 @@ class InvoiceController extends BaseController
             stock
         */
         $is_error = false;
-        if ( $count_error ) { $is_error = true; } 
+        if ( $count_error ) { $is_error = true; }
 
         return $this->view->render(
             $response,

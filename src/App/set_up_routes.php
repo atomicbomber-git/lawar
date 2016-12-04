@@ -1,7 +1,12 @@
 <?php
 
-/* Expects an instance of Slim\App */
+/* 
+    This file is intended to be require_once'd by index.php where an instance of
+    Slim\App has been instantiated.
+*/
+
 use App\Middleware\LoggedInMiddleware;
+use App\Middleware\AdminOnlyMiddleware;
 
 $container = $app->getContainer();
 
@@ -41,7 +46,12 @@ $app->group("/inventory", function () {
     $this->post("/type/edit/{type_id}", "InventoryController:processEditType")->setName("inventory-type-process-edit");
     $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
     $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
-    $this->get("/cash_register", "InventoryController:cashRegister")->setName("cash_register");
+
+
+    $this->get("/cash_register", "InventoryController:cashRegister")
+        ->setName("cash_register")
+        ->add(new AdminOnlyMiddleware($container));
+    
     $this->post("/cash_register/add_history", "InventoryController:addCashHistory")->setName("cash_register-add_history");
 
     /* --Routes pertaining the shopping cart functionality-- */
