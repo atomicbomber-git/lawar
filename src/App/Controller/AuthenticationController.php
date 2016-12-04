@@ -50,7 +50,7 @@ class AuthenticationController extends BaseController
 
         if ( ! $clerk ) {
             $_SESSION["message"]["error"]["incorrect"] = "Username atau password keliru";
-            $path = $this->container->get("router")->pathFor("login");
+            $path = $this->router->pathFor("login");
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', $path);
@@ -58,7 +58,7 @@ class AuthenticationController extends BaseController
 
         if ( ! BCrypt::verify($data["password"], $clerk->password) ) {
             $_SESSION["message"]["error"]["incorrect"] = "Username atau password keliru";
-            $path = $this->container->get("router")->pathFor("login");
+            $path = $this->router->pathFor("login");
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', $path);
