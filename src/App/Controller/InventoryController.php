@@ -31,7 +31,7 @@ class InventoryController extends BaseController
         if ( !$keyword && $keyword !== "0" ) {
             /* The keyword query must not be empty. */
             $_SESSION["message"]["error"]["keyword"] = "Error: Kata kunci tidak boleh kosong.";
-            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("home"));
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-search"));
         }
 
         if ($filter_type !== "type") {
@@ -70,6 +70,18 @@ class InventoryController extends BaseController
         }
 
         return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
+    }
+
+    public function searchItem ($request, $response) {
+
+        $message = null;
+        /* Retrieve messages that were stored in the session */
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
+        return $this->view->render($response, "inventory/item_search.twig", ["message" => $message]);
     }
 
     public function addItem ($request, $response)

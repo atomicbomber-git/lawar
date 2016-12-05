@@ -25,18 +25,28 @@
                 <span class="caret"></span>    
             </a>
             <ul class="dropdown-menu">
-                <li>
-                    <a href="{{ path_for('cash_register') }}"> <span class="glyphicon glyphicon-usd"></span> Kasir </a>
-                </li>
+
                 <li>
                     <a href="{{ path_for('cart') }}"> <span class="glyphicon glyphicon-shopping-cart"></span> Keranjang </a>
                 </li>
-                <li>
-                    <a href="{{ path_for('inventory-item-add') }}"> <span class="glyphicon glyphicon-plus"></span> Tambah Item </a>
-                </li>
-                <li>
-                    <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Barang </a>
-                </li>
+
+
+                {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
+                    <li>
+                        <a href="{{ path_for('cash_register') }}"> <span class="glyphicon glyphicon-usd"></span> Kasir </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ path_for('inventory-item-add') }}"> <span class="glyphicon glyphicon-plus"></span> Tambah Item </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Barang </a>
+                    </li>
+                {% endif %}
+
+                
+
                 <li>
                     <a href="#"> <span class="glyphicon glyphicon-user"></span> Akun </a>
                 </li>

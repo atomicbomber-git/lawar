@@ -12,22 +12,21 @@
         </div>
         <div> </div>
         <div style="align-items: center">
-            {% block control_manage %}
-                <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs align-bottom">
-                <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs align-bottom">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </a>
-            {% endblock %}
+            {% block control_manage %} {% endblock %}
         </div>
     </div>
 
     <div style="padding: 7px">
-        <span style="display: inline-block" class="label label-default"> Ukuran: {{ item.size | upper }} </span>
-        <span style="display: inline-block" class="label label-default"> Tipe: {{ item.type.name | upper }} </span>
-        <span style="display: inline-block" class="label label-default"> Toko: {{ item.stock_store | upper }} </span>
-        <span style="display: inline-block" class="label label-default"> Gudang: {{ item.stock_warehouse | upper }} </span>
+        <div>
+            <span style="display: inline-block" class="label label-default"> Ukuran: {{ item.size | upper }} </span>
+            <span style="display: inline-block" class="label label-default"> Tipe: {{ item.type.name | upper }} </span>
+        </div>
+
+        <div>
+            <span style="display: inline-block" class="label label-primary"> Toko: {{ item.stock_store | upper }} </span>
+            <span style="display: inline-block" class="label label-primary"> Gudang: {{ item.stock_warehouse | upper }} </span>
+            <span style="display: inline-block" class="label label-primary"> Event: {{ item.stock_event | upper }} </span>
+        </div>
             
         <p style="margin-top: 15px">
             {% if item.description %}
@@ -36,12 +35,5 @@
         </p>                   
     </div>
 
-    {% block control_add %}
-        <div style="text-align: right">
-            <a href="{{ path_for('invoice-item-add', {'item_id': item.id}) }}" class="btn btn-xs {% if (not item.stock_warehouse) and (not item.stock_store)  %} disabled btn-default {% else %} btn-primary {% endif %}">
-                Tambahkan
-                <span class="glyphicon glyphicon-plus"></span>
-            </a>
-        </div>
-    {% endblock %}
+    {% block control_add %} {% endblock %}
 </li>

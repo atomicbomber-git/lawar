@@ -2,37 +2,37 @@
 
 {% block title %} Halaman Utama {% endblock %}
 
+{% block head_extra %}
+    <style>
+    
+        .list-group-item {
+            height: 60px;
+        }
+
+    </style>
+{% endblock %}
+
 {% block body %}
     {# Navigation Bar #}
     {% include 'general/navbar.twig' %}
 
     <div class="container">
         <div class="spacer"></div>
-        <fieldset>
-            <legend> Pencarian Item </legend>
-        </fieldset>
-        <form action="{{ path_for('inventory-filtered') }}" method="GET">
-            <div class="form-group {% if message.error.keyword %} has-error {% endif %}">
-                <label class="control-label"> Kata Kunci: </label>
-                <input class="form-control" type="text" placeholder="Kata Kunci..." name="keyword">
-                {% if message.error.keyword %} <span class="help-block"> {{ message.error.keyword }} </span> {% endif %}
-            </div>
-            <div class="form-group">
-                <label class="control-label"> Berdasarkan: </label>
-                <select class="form-control" name="filter_type">
-                    <option value="name"> Nama </option>
-                    <option value="size"> Ukuran </option>
-                    <option value="type"> Tipe </option>
-                    <option value="description"> Deskripsi </option>
-                </select>
-            </div>
-            <div class="form-group" style="text-align: right">
-                <a class='btn btn-secondary' href="{{ path_for('inventory') }}"> Kembali </a>
-                <button class='btn btn-primary' }}>
-                    Cari
-                    <span class="glyphicon glyphicon-search"> </span>
-                </button>
-            </div>
-        </form>
-    </div>
+
+        <div class="well well-sm">
+            <h3> Selamat datang, {{ user.username }}! </h3>
+
+            <p> Status Anda adalah: <span class="label label-danger"> {{ user.privilege | upper }} </span> </p>
+        </div>
+
+        <a class="btn btn-info btn-block" href="{{ path_for("inventory") }}">
+            <span class="glyphicon glyphicon-list"> </span>
+            Daftar Item 
+        </a>
+
+        <a class="btn btn-info btn-block" href="{{ path_for("inventory-item-search") }}">
+            <span class="glyphicon glyphicon-search"> </span>
+            Pencarian Item 
+        </a>
+
 {% endblock %}

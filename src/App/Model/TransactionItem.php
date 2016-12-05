@@ -9,6 +9,6 @@ class TransactionItem extends Model
 
     /* Fields that can be mass filled */
     public $fillable = [
-        "name", "description", "item_id", "transaction_id", "size", "price", "type", "stock_store", "stock_warehouse"
+        "name", "description", "item_id", "transaction_id", "size", "price", "type", "stock_store", "stock_warehouse", "stock_event"
     ];
 }

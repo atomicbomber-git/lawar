@@ -186,4 +186,9 @@ class AuthenticationController extends BaseController
             ->withStatus(302)
             ->withHeader('Location', $this->router->pathFor("login"));
     }
+
+    public function authError ($request, $response)
+    {
+        return $this->view->render($response, "general/auth_error.twig");
+    }
 }

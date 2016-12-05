@@ -24,6 +24,10 @@ class LoggedInMiddleware
             return $response->withStatus(302)->withHeader("Location", $path);
         }
 
+        /* Add Twig global */
+        $this->container->view
+            ->getEnvironment()->addGlobal("user", $_SESSION["user"]);
+
         $response = $next($request, $response);
         return $response;
     }
