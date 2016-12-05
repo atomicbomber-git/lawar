@@ -36,6 +36,8 @@ $app->group("/inventory", function () use ($container) {
     $this->get("/filtered", "InventoryController:filtered")->setName("inventory-filtered");
     $this->get("/search", "InventoryController:searchItem")->setName("inventory-item-search");
 
+    $this->get("/debug", "InventoryController:debug");
+
     /* These routes apply universally to any TransactionItems*/
     $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
     $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");

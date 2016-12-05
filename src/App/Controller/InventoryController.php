@@ -16,7 +16,9 @@ class InventoryController extends BaseController
 
     public function all ($request, $response)
     {
-        $items = Item::get();
+        $items = Item::limit(10)
+            ->offset(10)
+            ->get();
         return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
     }
 

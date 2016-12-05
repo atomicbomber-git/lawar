@@ -126,6 +126,11 @@ class InvoiceController extends BaseController
 
         /* ---Substract all stock by the amount of purchased items--- */
 
+        
+    }
+
+    public function finishCart()
+    {
         /* Retrieve purchased items */
         $transaction_items = TransactionItem::select("item_id", "stock_store", "stock_warehouse", "stock_event")
             ->where("transaction_id", $_SESSION["cart_id"])
@@ -160,6 +165,11 @@ class InvoiceController extends BaseController
         /* Save cart id into session so the site knows which cart we're using currently */
         $_SESSION["cart_id"] = $cart->id;
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory"));
+    }
+
+    public function processFinishCart()
+    {
+        
     }
 
     public function addTransactionItem ($request, $response, $args)
