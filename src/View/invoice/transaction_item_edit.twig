@@ -17,6 +17,7 @@
             </div>
 
             <form action="{{ path_for('invoice-item-process-edit', {'item_id': item.id}) }}" method="POST">
+
                 <div class="form-group {% if message.error.stock_store %} has-error {% endif %}">
                     <label class="control-label"> Ambil dari Toko (Stok: {{ item.orig_stock_store }}): </label>
                     <input class="form-control" value="{{ item.stock_store }}" name="stock_store" placeholder="Dari toko">
@@ -24,11 +25,20 @@
                         <span class="help-block">  {{ message.error.stock_store }} </span>
                     {% endif %}
                 </div>
+
                 <div class="form-group {% if message.error.stock_warehouse %} has-error {% endif %}">
                     <label class="control-label"> Ambil dari Gudang (Stok: {{ item.orig_stock_warehouse }}): </label>
                     <input class="form-control" value="{{ item.stock_warehouse }}" name="stock_warehouse" placeholder="Dari gudang">
                     {% if message.error.stock_warehouse %}
                         <span class="help-block">  {{ message.error.stock_warehouse }} </span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.stock_event %} has-error {% endif %}">
+                    <label class="control-label"> Ambil dari Event (Stok: {{ item.orig_stock_warehouse }}): </label>
+                    <input class="form-control" value="{{ item.stock_event }}" name="stock_event" placeholder="Dari Stock Event">
+                    {% if message.error.stock_event %}
+                        <span class="help-block">  {{ message.error.stock_event }} </span>
                     {% endif %}
                 </div>
 

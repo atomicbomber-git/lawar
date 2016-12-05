@@ -38,14 +38,21 @@
                     {% endfor %}
                 </select>
             </div>
+
             <div class="form-group">
                 <label class="control-label"> Stock Toko: </label>
                 <input class="form-control" name="stock_store" type="number" min="0" placeholder="Stock Gudang" value="{{ item.stock_store }}">
             </div>
+
             <div class="form-group">
                 <label class="control-label"> Stock Gudang: </label>
                 <input class="form-control" name="stock_warehouse" type="number" min="0" placeholder="Stock Toko" value="{{ item.stock_warehouse }}">
-            </div>   
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Stock Event: </label>
+                <input class="form-control" name="stock_event" type="number" min="0" placeholder="Stock Event" value="{{ item.stock_event }}">
+            </div>
 
             <div class="form-group" style="text-align: right">
                 <a href="{{ path_for('inventory') }}" class="btn btn-secondary"> Kembali </a>

@@ -50,7 +50,7 @@ class AuthenticationController extends BaseController
 
         if ( ! $clerk ) {
             $_SESSION["message"]["error"]["incorrect"] = "Username atau password keliru";
-            $path = $this->container->get("router")->pathFor("login");
+            $path = $this->router->pathFor("login");
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', $path);
@@ -58,7 +58,7 @@ class AuthenticationController extends BaseController
 
         if ( ! BCrypt::verify($data["password"], $clerk->password) ) {
             $_SESSION["message"]["error"]["incorrect"] = "Username atau password keliru";
-            $path = $this->container->get("router")->pathFor("login");
+            $path = $this->router->pathFor("login");
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', $path);
@@ -83,12 +83,16 @@ class AuthenticationController extends BaseController
             $cart->save();
         }
 
-        /* Mark the user as logged in */
-        $_SESSION["is_logged_in"] = true;
-        $_SESSION["user_id"] = $clerk->id;
+        /* Store the user data in the session. Will be used later to determine if
+            the user has been logged in in his current session
+         */
+        $_SESSION["user"] = $clerk;
+
+        /* Cart id is stored so it can be used later to determine which cart the user currently has */
         $_SESSION["cart_id"] = $cart->id;
 
-        $path = $this->router->pathFor("inventory");
+
+        $path = $this->router->pathFor("home");
 
         return $response
             ->withStatus(302)
@@ -97,7 +101,8 @@ class AuthenticationController extends BaseController
 
     public function logout ($request, $response)
     {
-        $_SESSION["is_logged_in"] = false;
+        session_destroy();
+
         return $response
             ->withStatus(302)
             ->withHeader('Location', $this->router->pathFor("login"));
@@ -180,5 +185,10 @@ class AuthenticationController extends BaseController
         return $response
             ->withStatus(302)
             ->withHeader('Location', $this->router->pathFor("login"));
+    }
+
+    public function authError ($request, $response)
+    {
+        return $this->view->render($response, "general/auth_error.twig");
     }
 }

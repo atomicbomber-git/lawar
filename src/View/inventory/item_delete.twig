@@ -1,6 +1,6 @@
 {% extends 'general/base.twig' %}
 
-{% block title %} Hapus Item No. {{ item.id }} {% endblock %}
+{% block title %} Hapus Item "{{ item.name }}" {% endblock %}
 
 {% block head_extra %}
     <style>
@@ -17,7 +17,7 @@
     <div class="container">
         <div class="spacer"></div>
         <fieldset>
-            <legend> Hapus Item No. {{ item.id }} </legend>
+            <legend> Hapus Item "{{ item.name }}" </legend>
         </fieldset>
 
         <div class="well well-sm">

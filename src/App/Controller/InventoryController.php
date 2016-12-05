@@ -16,7 +16,9 @@ class InventoryController extends BaseController
 
     public function all ($request, $response)
     {
-        $items = Item::get();
+        $items = Item::limit(10)
+            ->offset(10)
+            ->get();
         return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
     }
 
@@ -70,6 +72,18 @@ class InventoryController extends BaseController
         }
 
         return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
+    }
+
+    public function searchItem ($request, $response) {
+
+        $message = null;
+        /* Retrieve messages that were stored in the session */
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
+        return $this->view->render($response, "inventory/item_search.twig", ["message" => $message]);
     }
 
     public function addItem ($request, $response)
@@ -252,7 +266,7 @@ class InventoryController extends BaseController
         $cash_history = new CashHistory([
             "amount" => $amount,
             "description" => $data["description"],
-            "clerk_id" => $_SESSION["user_id"],
+            "clerk_id" => $_SESSION["user"]->id,
         ]);
 
         $cash_history->save();

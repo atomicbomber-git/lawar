@@ -37,31 +37,39 @@ class InvoiceController extends BaseController
                     "transaction_items.price AS price",
                     "transaction_items.stock_warehouse AS stock_warehouse",
                     "transaction_items.stock_store AS stock_store",
+                    "transaction_items.stock_event AS stock_event",
                     "items.stock_warehouse AS orig_stock_warehouse",
-                    "items.stock_store AS orig_stock_store"
+                    "items.stock_store AS orig_stock_store",
+                    "items.stock_event AS orig_stock_event"
                 )
             ->having("transaction_id", "=", $_SESSION["cart_id"])
             ->get();
 
         /* Calculate total sum (sum of price * quantity) */
         $sum = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
-            ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
 
         /* Check if there exists transaction items which quantities are more than the currently available stock */
         $count_error = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
             ->select(Capsule::raw("
                 items.stock_store - transaction_items.stock_store AS diff_stock_store,
-                items.stock_warehouse - transaction_items.stock_warehouse AS diff_stock_warehouse
+                items.stock_warehouse - transaction_items.stock_warehouse AS diff_stock_warehouse,
+                items.stock_event - transaction_items.stock_event AS diff_stock_event
             "))
             ->where("transaction_items.transaction_id", "=", $_SESSION["cart_id"])
-            ->havingRaw("(diff_stock_store < 0) OR (diff_stock_warehouse < 0)")
+            ->havingRaw("(diff_stock_store < 0) OR (diff_stock_warehouse < 0) OR (diff_stock_event < 0)")
             ->first();
 
-        /* There's an error in our cart if there exists transaction items which quantity is larger than what's available in
-            stock
-        */
+        /* Check if there's any transaction item which quantity is completely zero */
+        $quantity_error = TransactionItem::where("transaction_items.stock_store", 0)
+            ->where("transaction_items.stock_warehouse", 0)
+            ->where("transaction_items.stock_event", 0)
+            ->where("transaction_items.transaction_id", "=", $_SESSION["cart_id"])
+            ->first();
+
         $is_error = false;
-        if ( $count_error ) { $is_error = true; } 
+        if ( $count_error ) { $is_error = true; }
+        if ( $quantity_error ) { $is_error = true; }
 
         return $this->view->render(
             $response,
@@ -78,7 +86,7 @@ class InvoiceController extends BaseController
 
         /* Calculate total sum (sum of price * quantity) */
         $sum = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
-            ->sum(Capsule::raw("price * (stock_warehouse + stock_store)"));
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
 
         /* Validate the amount_paid field */
         if ( ! V::numeric()->min($sum)->validate($data["amount_paid"]) ) {
@@ -87,6 +95,28 @@ class InvoiceController extends BaseController
             $_SESSION["message"]["form_error"]["amount_paid"] = "Jumlah uang yang dibayar tidak boleh kurang dari Rp. $formatted_sum.";
         }
 
+        /* Check if there exists transaction items which quantities are more than the currently available stock */
+        $count_error = TransactionItem::leftJoin("items", "transaction_items.item_id", "=", "items.id")
+            ->select(Capsule::raw("
+                items.stock_store - transaction_items.stock_store AS diff_stock_store,
+                items.stock_warehouse - transaction_items.stock_warehouse AS diff_stock_warehouse,
+                items.stock_event - transaction_items.stock_event AS diff_stock_event
+            "))
+            ->where("transaction_items.transaction_id", "=", $_SESSION["cart_id"])
+            ->havingRaw("(diff_stock_store < 0) OR (diff_stock_warehouse < 0) OR (diff_stock_event < 0)")
+            ->first();
+
+        if ( $count_error ) { $has_error = true; }
+
+        /* Check if there's any transaction item which quantity is completely zero */
+        $quantity_error = TransactionItem::where("transaction_items.stock_store", 0)
+            ->where("transaction_items.stock_warehouse", 0)
+            ->where("transaction_items.stock_event", 0)
+            ->where("transaction_items.transaction_id", "=", $_SESSION["cart_id"])
+            ->first();
+
+        if ( $quantity_error ) { $has_error = true; }
+
         if ($has_error) {
             /* Persist previous form data */
             $_SESSION["persisted"]["amount_paid"] = $data["amount_paid"];
@@ -94,18 +124,24 @@ class InvoiceController extends BaseController
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
         }
 
-
         /* ---Substract all stock by the amount of purchased items--- */
 
+        
+    }
+
+    public function finishCart()
+    {
         /* Retrieve purchased items */
-        $transaction_items = TransactionItem::select("item_id", "stock_store", "stock_warehouse")
+        $transaction_items = TransactionItem::select("item_id", "stock_store", "stock_warehouse", "stock_event")
             ->where("transaction_id", $_SESSION["cart_id"])
             ->get();
 
         foreach ($transaction_items as $transaction_item) {
             /* Issue a query to substract stock items */
-            Item::find( $transaction_item->item_id )->decrement("stock_store", $transaction_item->stock_store );
-            Item::find( $transaction_item->item_id )->decrement("stock_warehouse", $transaction_item->stock_warehouse );
+            $item = Item::find( $transaction_item->item_id );
+            $item->decrement("stock_store", $transaction_item->stock_store );
+            $item->decrement("stock_warehouse", $transaction_item->stock_warehouse );
+            $item->decrement("stock_event", $transaction_item->stock_event );
 
             /* TODO: Store item transfer history */
         }
@@ -120,7 +156,7 @@ class InvoiceController extends BaseController
             "customer_name" => "",
             "customer_phone" => "",
             "datetime" => date("Y-m-d H-i-s"),
-            "clerk_id" => $_SESSION["user_id"],
+            "clerk_id" => $_SESSION["user"]->id,
             "is_finished" => 0
         ]);
 
@@ -129,6 +165,11 @@ class InvoiceController extends BaseController
         /* Save cart id into session so the site knows which cart we're using currently */
         $_SESSION["cart_id"] = $cart->id;
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory"));
+    }
+
+    public function processFinishCart()
+    {
+        
     }
 
     public function addTransactionItem ($request, $response, $args)
@@ -163,7 +204,8 @@ class InvoiceController extends BaseController
                 "price"=> $item->price,
                 "type"=> $item->type[name],
                 "stock_store"=> $data["stock_store"],
-                "stock_warehouse"=> $data["stock_warehouse"]
+                "stock_warehouse"=> $data["stock_warehouse"],
+                "stock_event"=> $data["stock_event"]
             ]);
 
             $new_transaction_item->save();
@@ -208,8 +250,10 @@ class InvoiceController extends BaseController
                 "transaction_items.price AS price",
                 "transaction_items.stock_warehouse AS stock_warehouse",
                 "transaction_items.stock_store AS stock_store",
+                "transaction_items.stock_event AS stock_event",
                 "items.stock_warehouse AS orig_stock_warehouse",
-                "items.stock_store AS orig_stock_store"
+                "items.stock_store AS orig_stock_store",
+                "items.stock_event AS orig_stock_event"
             )
             ->where("transaction_items.id", $args["item_id"])
             ->first();
