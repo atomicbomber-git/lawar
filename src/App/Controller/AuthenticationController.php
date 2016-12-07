@@ -12,7 +12,7 @@ class AuthenticationController extends BaseController
     public function login ($request, $response)
     {
         /* Redirect to home if the user has been logged in before */
-        if ( $_SESSION["user"] ) {
+        if ( isset($_SESSION["user"]) ) {
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("home"));
         }
 
