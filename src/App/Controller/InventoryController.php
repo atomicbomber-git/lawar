@@ -5,10 +5,16 @@ use App\Model\Item;
 use App\Model\Type;
 use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Jenssegers\Date\Date;
 use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
+    public function debug ()
+    {
+        return "Success.";
+    }
+
     public function home ($request, $response)
     {
         return $this->view->render($response, "inventory/home.twig");
@@ -267,10 +273,31 @@ class InventoryController extends BaseController
             "amount" => $amount,
             "description" => $data["description"],
             "clerk_id" => $_SESSION["user"]->id,
+            "datetime" => date("Y-m-d H:i:s")
         ]);
 
         $cash_history->save();
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
+    }
+
+    public function ledger ($request, $response)
+    {
+        $cash_history = CashHistory::orderBy("datetime", "desc")
+            ->limit(10)
+            ->get();
+
+        Date::setLocale('id');
+
+        /* Formats date to a human readable form */
+        foreach ($cash_history as $record) {
+            $date = new Date($record->datetime);
+            $record->datetime = $date->format("j F Y h:i:s");
+
+            /* Human readable formats (like '5 days ago', 'Just now', etc.)*/
+            $record->h_datetime = $date->diffForHumans();
+        }
+
+        return $this->view->render($response, "inventory/ledger.twig", ["cash_history" => $cash_history]);
     }
 }

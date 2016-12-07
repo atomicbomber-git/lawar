@@ -33,7 +33,11 @@
 
                 {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
                     <li>
-                        <a href="{{ path_for('cash_register') }}"> <span class="glyphicon glyphicon-usd"></span> Kasir </a>
+                        <a href="{{ path_for('cash_register') }}"> <span class="glyphicon glyphicon-usd"></span> Tarik / Setor Kas </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path_for('ledger') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
                     </li>
                     
                     <li>
@@ -41,14 +45,12 @@
                     </li>
                     
                     <li>
-                        <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Barang </a>
+                        <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Item </a>
                     </li>
                 {% endif %}
 
-                
-
                 <li>
-                    <a href="#"> <span class="glyphicon glyphicon-user"></span> Akun </a>
+                    <a href="#"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
                 </li>
             </ul>
         </li>
