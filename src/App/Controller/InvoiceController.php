@@ -82,6 +82,15 @@ class InvoiceController extends BaseController
     public function cartFinish($request, $response) {
         $data = $request->getParsedBody();
 
+        /* ---Check if cart is empty---*/
+        $transaction_items = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
+            ->first();
+
+        if ( ! $transaction_items ) {
+            $_SESSION["message"]["error"]["cart_empty"] = "Keranjang belanjaan masih kosong";
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
+        }
+
         /* ---Validate data--- */
         $has_error = false;
 
