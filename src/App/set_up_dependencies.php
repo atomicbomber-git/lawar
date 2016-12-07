@@ -42,3 +42,9 @@ $container["InventoryController"] = function ($container)
 {
     return new \App\Controller\InventoryController($container);
 };
+
+/* User controller */
+$container["UserController"] = function ($container)
+{
+    return new \App\Controller\UserController($container);
+};

@@ -11,7 +11,7 @@
         <div style="height: 70px"></div>
         <fieldset>
             <legend> Masuk </legend>
-            <form action="{{ base_url() }}/login" method="POST">
+            <form action="{{ path_for("process-login") }}" method="POST">
                 <div class="form-group {% if message.error.incorrect or message.error.username %} has-error {% endif %}">
                     <label class="control-label"> Nama Pengguna: </label>
                     <input class="form-control" type="text" name="username" placeholder="Nama Pengguna">
@@ -34,7 +34,6 @@
                 {% endif %}
 
                 <div style="text-align: right">
-                    <a href="{{ path_for('signup') }}" class="btn btn-secondary"> Daftar Akun </a>
                     <button class="btn btn-primary"> Masuk </button>
                 </div>
             </form>

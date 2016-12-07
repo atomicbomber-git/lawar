@@ -19,7 +19,7 @@ $app->get("/", function ($request, $response) {
 
 /* Login and authentication related routes */
 $app->get("/login", "AuthenticationController:login")->setName("login");
-$app->post("/login", "AuthenticationController:processLogin");
+$app->post("/login", "AuthenticationController:processLogin")->setName("process-login");
 
 $app->get("/auth_error", "AuthenticationController:authError")
     ->setName("autherror")
@@ -70,10 +70,16 @@ $app->group("/inventory", function () use ($container) {
 
     /* URLs accessible only by user with ADMIN privilege */
     $this->group("", function () use ($container) {
-        $this->get("/signup", "AuthenticationController:signup")->setName("signup");
-        $this->post("/signup", "AuthenticationController:processSignup");
+        $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
+        $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
     })->add(new AdminOnlyMiddleware($container));
 
+})->add(new LoggedInMiddleware($container));
+
+$app->group("/user", function() {
+    $this->get("/signup", "UserController:signup")->setName("user-signup");
+    $this->post("/signup", "UserController:processSignup")->setName("user-process-signup");
+    $this->get("/manage", "UserController:manage")->setName("user-manage");
 })->add(new LoggedInMiddleware($container));
 
 $app->group("/invoice", function () {

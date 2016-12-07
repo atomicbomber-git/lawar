@@ -1,0 +1,71 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Catatan Keuangan Toko {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p.header {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        p.content {
+            font-size: 9pt;
+            margin-bottom: 2px;
+        }
+
+        .list-group-item {
+            padding: 7px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+            <legend> Catatan Keuangan Toko </legend>
+
+            <div class="list-group">
+                {% for record in cash_history %}
+                    <div class="list-group-item">
+                        <p class="header"> Jumlah: </p>
+                        <p class="content">
+                            Rp. {{ record.amount | abs | number_format(2, ",", ".") }}
+                        </p>
+
+                        <p class="header"> Keluar / Masuk: </p>
+                        <p class="content">
+                            {% if record.amount < 0 %}
+                                <label class="label label-danger"> Keluar </label>
+                            {% else %}
+                                <label class="label label-success"> Masuk </label>
+                            {% endif %} 
+                        </p>
+
+                        <p class="header"> Deskripsi: </p>
+                        <p class="content">
+                            {% if record.transaction_id %}
+                                <a href="{{ path_for("invoice-transaction-detail", {"id": record.transaction_id}) }}">
+                                    {{ record.description }} 
+                                </a>
+                            {% else %}
+                                {{ record.description }}
+                            {% endif %}
+                        </p>
+
+                        <p class="header"> Waktu: </p>
+                        <p class="content"> {{ record.datetime }}, {{ record.h_datetime }} </p>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </fieldset>
+
+    </div>
+{% endblock %}

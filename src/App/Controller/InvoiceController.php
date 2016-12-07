@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\TransactionItem;
 use App\Model\Transaction;
 use App\Model\Item;
+use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Respect\Validation\Validator as V;
 
@@ -81,6 +82,15 @@ class InvoiceController extends BaseController
     public function cartFinish($request, $response) {
         $data = $request->getParsedBody();
 
+        /* ---Check if cart is empty---*/
+        $transaction_items = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
+            ->first();
+
+        if ( ! $transaction_items ) {
+            $_SESSION["message"]["error"]["cart_empty"] = "Keranjang belanjaan masih kosong";
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
+        }
+
         /* ---Validate data--- */
         $has_error = false;
 
@@ -125,12 +135,6 @@ class InvoiceController extends BaseController
         }
 
         /* ---Substract all stock by the amount of purchased items--- */
-
-        
-    }
-
-    public function finishCart()
-    {
         /* Retrieve purchased items */
         $transaction_items = TransactionItem::select("item_id", "stock_store", "stock_warehouse", "stock_event")
             ->where("transaction_id", $_SESSION["cart_id"])
@@ -151,6 +155,16 @@ class InvoiceController extends BaseController
         $transaction->is_finished = true;
         $transaction->save();
 
+        /* Save cash history */
+        $cash_history = new CashHistory([
+            "amount" => $sum,
+            "description" => "Transaksi jual beli.",
+            "clerk_id" => $_SESSION["user"]->id,
+            "transaction_id" => $transaction->id,
+            "datetime" => date("Y-m-d H:i:s")
+        ]);
+        $cash_history->save();
+
         /* Create a fresh new cart */
         $cart = new Transaction([
             "customer_name" => "",
@@ -164,11 +178,8 @@ class InvoiceController extends BaseController
 
         /* Save cart id into session so the site knows which cart we're using currently */
         $_SESSION["cart_id"] = $cart->id;
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory"));
-    }
 
-    public function processFinishCart()
-    {
+        return $this->view->render($response, "invoice/transaction_finished.twig", ["change" => $data["amount_paid"] - $sum]);
         
     }
 
@@ -286,5 +297,10 @@ class InvoiceController extends BaseController
         $transaction_item->update( $request->getParsedBody() );
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
+    }
+
+    public function transactionDetail ($request, $response, $args)
+    {
+        
     }
 }

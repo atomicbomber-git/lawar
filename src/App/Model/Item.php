@@ -15,6 +15,6 @@ class Item extends Model
 
     /* Fields that can be mass filled */
     public $fillable = [
-        "name", "description", "size", "type_id", "price", "stock_store", "stock_warehouse", "stock_event"
+        "name", "description", "size", "type_id", "price", "entry_date", "stock_store", "stock_warehouse", "stock_event"
     ];
 }

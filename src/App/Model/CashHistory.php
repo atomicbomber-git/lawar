@@ -9,6 +9,6 @@ class CashHistory extends Model
     public $timestamps = false;
 
     public $fillable = [
-        "amount", "description", "clerk_id"
+        "amount", "description", "clerk_id", "transaction_id", "datetime"
     ];
 }

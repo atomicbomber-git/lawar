@@ -5,10 +5,16 @@ use App\Model\Item;
 use App\Model\Type;
 use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Jenssegers\Date\Date;
 use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
+    public function debug ()
+    {
+        return "Success.";
+    }
+
     public function home ($request, $response)
     {
         return $this->view->render($response, "inventory/home.twig");
@@ -18,6 +24,7 @@ class InventoryController extends BaseController
     {
         $items = Item::limit(10)
             ->offset(10)
+            ->orderBy("entry_date")
             ->get();
         return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
     }
@@ -120,21 +127,28 @@ class InventoryController extends BaseController
             $_SESSION["message"]["form_error"]["stock_warehouse"] = "Data minimal bernilai 0";
         } 
 
+        if ( ! V::notEmpty()->validate($data["entry_date"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["entry_date"] = "Tanggal masuk wajib ada";
+        }
+
         if ($has_error) {
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
         }
 
-        $item = new Item( $request->getParsedBody() );
+        /* Format date so it can be inserted to database */
+        $data["entry_date"] = (new Date($data["entry_date"]))->format("Y-m-d");
+
+        $item = new Item( $data );
         $item->save();
 
-        $_SESSION["message"]["success"]["add"] = "Item '$item->name' berhasil ditambahkan!";
-
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add") . "#message");
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory"));
     }
 
     public function editItem ($request, $response, $args)
     {
         $message = null;
+
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
@@ -267,10 +281,31 @@ class InventoryController extends BaseController
             "amount" => $amount,
             "description" => $data["description"],
             "clerk_id" => $_SESSION["user"]->id,
+            "datetime" => date("Y-m-d H:i:s")
         ]);
 
         $cash_history->save();
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
+    }
+
+    public function ledger ($request, $response)
+    {
+        $cash_history = CashHistory::orderBy("datetime", "desc")
+            ->limit(10)
+            ->get();
+
+        Date::setLocale('id');
+
+        /* Formats date to a human readable form */
+        foreach ($cash_history as $record) {
+            $date = new Date($record->datetime);
+            $record->datetime = $date->format("j F Y h:i:s");
+
+            /* Human readable formats (like '5 days ago', 'Just now', etc.)*/
+            $record->h_datetime = $date->diffForHumans();
+        }
+
+        return $this->view->render($response, "inventory/ledger.twig", ["cash_history" => $cash_history]);
     }
 }

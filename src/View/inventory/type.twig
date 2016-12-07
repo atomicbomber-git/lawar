@@ -44,12 +44,10 @@
                             <td> {{ type.name }} </td>
                             <td>
                                 <a href="{{ path_for('inventory-type-edit', {'type_id':  type.id}) }}" class="btn btn-success btn-xs">
-                                    Sunting
-                                    <span class="glyphicon glyphicon-cog"> </span>
+                                    <span class="glyphicon glyphicon-pencil"> </span>
                                 </a>
                                 <a href="{{ path_for('inventory-type-delete', {'type_id':  type.id}) }}" class="btn btn-danger btn-xs">
-                                    Hapus
-                                    <span class="glyphicon glyphicon-remove"> </span>
+                                    <span class="glyphicon glyphicon-trash"> </span>
                                 </a>
                             </td>
                         </tr>
