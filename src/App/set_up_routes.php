@@ -80,6 +80,12 @@ $app->group("/user", function() {
     $this->get("/signup", "UserController:signup")->setName("user-signup");
     $this->post("/signup", "UserController:processSignup")->setName("user-process-signup");
     $this->get("/manage", "UserController:manage")->setName("user-manage");
+    $this->get("/edit/{id}", "UserController:edit")->setName("user-edit");
+    $this->post("/edit/{id}", "UserController:processEdit")->setName("user-process-edit");
+    $this->get("/editPassword/{id}", "UserController:editPassword/")->setName("user-edit-password");
+    $this->post("/editPassword/{id}", "UserController:processEditPassword")->setName("user-process-edit-password");
+    $this->get("/delete/{id}", "UserController:delete")->setName("user-delete");
+    $this->post("/delete/{id}", "UserController:processDelete")->setName("user-process-delete");
 })->add(new LoggedInMiddleware($container));
 
 $app->group("/invoice", function () {

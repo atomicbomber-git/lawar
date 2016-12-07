@@ -1,0 +1,53 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Hapus Akun {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p {
+            margin-bottom: 2px;
+        }
+
+        p.header {
+            font-weight: bold
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig'%}
+    
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+
+            <legend> Hapus Akun </legend>
+
+            <div class="well well-sm">
+                <p class="header"> Nama Pengguna: </p>
+                <p> {{ user.username }} </p>
+                <p class="header"> Telepon: </p>
+                <p> {{ user.phone }} </p>
+                <p class="header"> Status: </p>
+                <p> {{ user.privilege }} </p>
+            </div>
+
+            <div class="alert alert-danger">
+                Anda yakin ingin menghapus pengguna ini? Penghapusan dapat berakibat kehilangan data pada catatan transaksi dan keuangan tang melibatkan pengguna ini.
+            </div>
+
+            <form action="{{ path_for("user-process-delete", {"id": user.id }) }}" method="POST">
+                <div class="text-right">
+                    <button class="btn btn-danger">
+                        Hapus
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+            </form>
+
+        </fieldset>
+    </div>
+{% endblock %}
