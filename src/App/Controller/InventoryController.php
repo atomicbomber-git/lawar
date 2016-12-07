@@ -24,6 +24,7 @@ class InventoryController extends BaseController
     {
         $items = Item::limit(10)
             ->offset(10)
+            ->orderBy("entry_date")
             ->get();
         return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
     }
@@ -126,21 +127,28 @@ class InventoryController extends BaseController
             $_SESSION["message"]["form_error"]["stock_warehouse"] = "Data minimal bernilai 0";
         } 
 
+        if ( ! V::notEmpty()->validate($data["entry_date"]) ) {
+            $has_error = true;
+            $_SESSION["message"]["form_error"]["entry_date"] = "Tanggal masuk wajib ada";
+        }
+
         if ($has_error) {
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add"));
         }
 
-        $item = new Item( $request->getParsedBody() );
+        /* Format date so it can be inserted to database */
+        $data["entry_date"] = (new Date($data["entry_date"]))->format("Y-m-d");
+
+        $item = new Item( $data );
         $item->save();
 
-        $_SESSION["message"]["success"]["add"] = "Item '$item->name' berhasil ditambahkan!";
-
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory-item-add") . "#message");
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("inventory"));
     }
 
     public function editItem ($request, $response, $args)
     {
         $message = null;
+
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
