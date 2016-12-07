@@ -5,12 +5,12 @@
 {% block body %}
 
     {# Navigation Bar #}
-    {% include 'general/navbar_plain.twig'%}
+    {% include 'general/navbar.twig'%}
     
     <div class="container">
-        <div style="height: 20px"></div>
+        <div class="spacer"></div>
         <fieldset>
-            <legend> Pendaftaran Akun Pegawai </legend>
+            <legend> Pendaftaran Akun </legend>
             <form action="{{ path_for("user-process-signup") }}" method="POST">
                 
                 <div class="form-group {% if message.error.username %} has-error {% endif %}">
@@ -54,7 +54,7 @@
                 {% endif %}
 
                 <div style="text-align: right">
-                    <a href="{{ path_for('home') }}" class="btn btn-secondary"> Kembali ke Halaman Utama </a>
+                    <a href="{{ path_for('user-manage') }}" class="btn btn-secondary"> Kembali </a>
                     <button class="btn btn-primary"> Daftarkan </button>
                 </div>
             </form>

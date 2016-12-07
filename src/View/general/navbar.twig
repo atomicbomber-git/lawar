@@ -49,9 +49,11 @@
                     </li>
                 {% endif %}
 
-                <li>
-                    <a href="#"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
-                </li>
+                {% if user.privilege == "ADMINISTRATOR" %}
+                    <li>
+                        <a href="{{ path_for("user-manage") }}"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
+                    </li>
+                {% endif %}
             </ul>
         </li>
 

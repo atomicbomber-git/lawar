@@ -10,7 +10,8 @@ class UserController extends BaseController
 {
     public function manage ($request, $response)
     {
-
+        $users = Clerk::select("username", "phone", "privilege", "id")->get();
+        return $this->view->render($response, "user/user_manage.twig", ["users" => $users]);
     }
 
     public function signup ($request, $response)
@@ -21,7 +22,7 @@ class UserController extends BaseController
             unset( $_SESSION["message"]["error"] );
         }
 
-        return $this->view->render($response, "user/signup.twig", ["message" => $message]);
+        return $this->view->render($response, "user/user_signup.twig", ["message" => $message]);
     }
 
     public function processSignup ($request, $response)
