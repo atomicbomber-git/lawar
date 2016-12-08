@@ -37,14 +37,16 @@
 
         {#  Manager and admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
-            <a class="btn btn-default btn-block" href="{{ path_for("ledger") }}">
-                <span class="glyphicon glyphicon-book"> </span>
-                Catatan Keuangan 
-            </a>
+            
         {% endif %}
 
         {#  Admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" %}
+            <a class="btn btn-default btn-block" href="{{ path_for("ledger") }}">
+                <span class="glyphicon glyphicon-book"> </span>
+                Catatan Keuangan 
+            </a>
+            
             <a class="btn btn-default btn-block" href="{{ path_for("invoice-transaction-list") }}">
                 <span class="glyphicon glyphicon-list-alt"> </span>
                 Catatan Transaksi 
