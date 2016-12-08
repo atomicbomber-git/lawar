@@ -21,7 +21,7 @@ $container['view'] = function ($container) {
 $container["logger"] = function ($container) use ($WEB_ROOT)
 {
     $logger = new Logger("lawar_shop_logger");
-    $logger->pushHandler(new StreamHandler("$WEB_ROOT/log/lawar_shop_web.log", Logger::DEBUG));
+    $logger->pushHandler(new StreamHandler("$WEB_ROOT/app_log/app.log", Logger::DEBUG));
     return $logger;
 };
 
