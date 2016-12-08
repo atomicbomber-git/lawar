@@ -17,14 +17,6 @@ $container['view'] = function ($container) {
     return $view;
 };
 
-/* Monolog logger */
-$container["logger"] = function ($container) use ($WEB_ROOT)
-{
-    $logger = new Logger("lawar_shop_logger");
-    $logger->pushHandler(new StreamHandler("$WEB_ROOT/app_log/app.log", Logger::DEBUG));
-    return $logger;
-};
-
 /* Authentication controller */
 $container["AuthenticationController"] = function ($container)
 {
