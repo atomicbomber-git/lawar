@@ -27,6 +27,13 @@
             <legend> Hapus Akun </legend>
 
             <div class="well well-sm">
+                <a href="{{ path_for('invoice-transaction-list') }}" class="btn btn-warning btn-xs">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    Kembali
+                </a>
+            </div>
+
+            <div class="well well-sm">
                 <p class="header"> Nama Pengguna: </p>
                 <p> {{ user.username }} </p>
                 <p class="header"> Telepon: </p>
