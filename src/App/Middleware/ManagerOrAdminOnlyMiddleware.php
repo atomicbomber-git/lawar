@@ -11,8 +11,6 @@ class ManagerOrAdminOnlyMiddleware
 
     public function __invoke ($request, $response, $next)
     {
-
-        $this->container->logger->addInfo("Manger or Admin!, Privilege " . $_SESSION["user"]->privilege);
         
         if ( $_SESSION["user"]->privilege !== "ADMINISTRATOR" && $_SESSION["user"]->privilege !== "MANAGER" )  {
 
