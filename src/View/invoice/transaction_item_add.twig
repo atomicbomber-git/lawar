@@ -15,19 +15,22 @@
 
             <div class="well well-sm">
                 <form action="{{ path_for('invoice-item-process-add', {'item_id': item.id}) }}" method="POST">
-                    <div class="form-group">
-                        <label> Jumlah Dari Toko: </label>
+                    <div class="form-group {% if message.error.stock_store %} has-error {% endif %}">
+                        <label class="control-label"> Jumlah Dari Toko: </label>
                         <input class="form-control" type="number" placeholder="Jumlah item dari toko" name="stock_store" value="0">
+                        {% if message.error.stock_store %} <span class="help-block"> {{ message.error.stock_store }} </span> {% endif %}
                     </div>
 
-                    <div class="form-group">
-                        <label> Jumlah Dari Gudang: </label>
+                    <div class="form-group {% if message.error.stock_warehouse %} has-error {% endif %}">
+                        <label class="control-label"> Jumlah Dari Gudang: </label>
                         <input class="form-control" type="number" placeholder="Jumlah item dari gudang" name="stock_warehouse" value="0">
+                        {% if message.error.stock_warehouse %} <span class="help-block"> {{ message.error.stock_warehouse }} </span> {% endif %}
                     </div>
 
-                    <div class="form-group">
-                        <label> Jumlah Dari Stock Event: </label>
+                    <div class="form-group {% if message.error.stock_event %} has-error {% endif %}">
+                        <label class="control-label"> Jumlah Dari Stock Event: </label>
                         <input class="form-control" type="number" placeholder="Jumlah item dari stock event" name="stock_event" value="0">
+                        {% if message.error.stock_event %} <span class="help-block"> {{ message.error.stock_event }} </span> {% endif %}
                     </div>
 
                     <div class="form-group" style="text-align: right">

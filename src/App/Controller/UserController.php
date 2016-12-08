@@ -44,6 +44,12 @@ class UserController extends BaseController
             $_SESSION["message"]["error"]["username"] = "Nama pengguna wajib diisi";
         }
 
+        if ( ! V::notEmpty()->validate( $data["name"] ) ) {
+            $hasError = true;
+            $_SESSION["message"]["error"]["name"] = "Nama asli wajib diisi";
+        }
+
+
         if ( ! $data["phone"] ) {
             $hasError = true;
             $_SESSION["message"]["error"]["phone"] = "Nomor telepon wajib diisi";
@@ -67,7 +73,7 @@ class UserController extends BaseController
         if ( $hasError ) {
             return $response
                 ->withStatus(302)
-                ->withHeader('Location', $this->router->pathFor("signup") );
+                ->withHeader('Location', $this->router->pathFor("user-signup") );
         }
 
         /* Check there's a user with the same username */
@@ -80,7 +86,7 @@ class UserController extends BaseController
             $_SESSION["message"]["error"]["user_exists"] = "Sudah ada nama pengguna yang sama: $data[username]";
             return $response
                 ->withStatus(302)
-                ->withHeader('Location', $this->router->pathFor("signup") );
+                ->withHeader('Location', $this->router->pathFor("user-signup") );
         }
 
         /* Check if password and password_retry fields contain the same value */
@@ -90,11 +96,12 @@ class UserController extends BaseController
             $_SESSION["message"]["error"]["password_retry"] = "Kata sandi dan pengulangannya wajib sama.";
             return $response
                 ->withStatus(302)
-                ->withHeader('Location', $this->router->pathFor("signup") );
+                ->withHeader('Location', $this->router->pathFor("user-signup") );
         }
 
         $clerk = new Clerk;
         $clerk->username = $data["username"];
+        $clerk->name = $data["name"];
         $clerk->phone = $data["phone"];
         $clerk->privilege = $data["privilege"];
         $clerk->password = BCrypt::hash($data["password"]);
@@ -116,8 +123,8 @@ class UserController extends BaseController
             unset( $_SESSION["message"] );
         }
 
-        $user = Clerk::find($args["id"]);
-        return $this->view->render($response, "user/user_edit.twig", ["user" => $user, "message" => $message]);
+        $clerk = Clerk::find($args["id"]);
+        return $this->view->render($response, "user/user_edit.twig", ["clerk" => $clerk, "message" => $message]);
     }
 
     function processEdit ($request, $response, $args)
@@ -130,6 +137,11 @@ class UserController extends BaseController
 
         if ( ! V::notEmpty()->validate($data["username"]) ) {
             $_SESSION["message"]["error"]["username"] = "Kolom tidak boleh kosong";
+            $hasError = true;
+        }
+
+        if ( ! V::notEmpty()->validate($data["name"]) ) {
+            $_SESSION["message"]["error"]["name"] = "Kolom tidak boleh kosong";
             $hasError = true;
         }
 
@@ -151,6 +163,7 @@ class UserController extends BaseController
         $_SESSION["message"]["success"]["userdata_changed"] = "Data akun berhasil diganti";
         $user = Clerk::find($args["id"]);
         $user->username = $data["username"];
+        $user->name = $data["name"];
         $user->phone = $data["phone"];
         $user->privilege = $data["privilege"];
         $user->save();

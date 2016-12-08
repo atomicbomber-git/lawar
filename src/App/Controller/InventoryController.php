@@ -300,7 +300,7 @@ class InventoryController extends BaseController
         /* Formats date to a human readable form */
         foreach ($cash_history as $record) {
             $date = new Date($record->datetime);
-            $record->datetime = $date->format("j F Y h:i:s");
+            $record->datetime = $date->format("j F Y - h:i");
 
             /* Human readable formats (like '5 days ago', 'Just now', etc.)*/
             $record->h_datetime = $date->diffForHumans();

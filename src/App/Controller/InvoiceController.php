@@ -7,6 +7,7 @@ use App\Model\Item;
 use App\Model\CashHistory;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Respect\Validation\Validator as V;
+use Jenssegers\Date\Date;
 
 class InvoiceController extends BaseController
 {
@@ -17,7 +18,6 @@ class InvoiceController extends BaseController
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
             unset( $_SESSION["message"] );
-
         }
 
         /* Retrieve persisted form field values */
@@ -152,6 +152,7 @@ class InvoiceController extends BaseController
 
         /* Mark cart / transaction invoice as finished, so the next time the user log ins, she'll get a brand new empty cart */
         $transaction = Transaction::find($_SESSION["cart_id"]);
+        $transaction->datetime = date("Y-m-d H:i:s");
         $transaction->is_finished = true;
         $transaction->save();
 
@@ -179,14 +180,33 @@ class InvoiceController extends BaseController
         /* Save cart id into session so the site knows which cart we're using currently */
         $_SESSION["cart_id"] = $cart->id;
 
-        return $this->view->render($response, "invoice/transaction_finished.twig", ["change" => $data["amount_paid"] - $sum]);
-        
+        /* Redirect to cart_finished page, to prevent repeated finishing action when the user refreshed the page */
+        $_SESSION["change"] = $data["amount_paid"] - $sum;
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart-finished"));
+    }
+
+    public function cartFinished($request, $response, $args) {
+
+        $change = null;
+        if ( isset($_SESSION["change"]) ) {
+            $change = $_SESSION["change"];
+            unset($_SESSION["change"]);
+        }
+
+        return $this->view->render($response, "invoice/transaction_finished.twig", ["change" => $change]);
     }
 
     public function addTransactionItem ($request, $response, $args)
     {
+        /* Retrieve messages that were stored in the session */
+        $message = null;
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         $item = Item::find($args["item_id"]);
-        return $this->view->render($response, "invoice/transaction_item_add.twig", ["item" => $item]);
+        return $this->view->render($response, "invoice/transaction_item_add.twig", ["item" => $item, "message" => $message]);
     }
 
     public function processAddTransactionItem ($request, $response, $args)
@@ -194,6 +214,28 @@ class InvoiceController extends BaseController
 
         /* Retrieve POST data */
         $data = $request->getParsedBody();
+
+        /*---Validate user input---*/
+        $hasError = false;
+
+        if ( ! V::intVal()->validate($data["stock_store"]) ) {
+            $hasError = true;
+            $_SESSION["message"]["error"]["stock_store"] = "Nilai wajib berupa bilangan bulat";
+        }
+
+        if ( ! V::intVal()->validate($data["stock_warehouse"]) ) {
+            $hasError = true;
+            $_SESSION["message"]["error"]["stock_warehouse"] = "Nilai wajib berupa bilangan bulat";
+        }
+
+        if ( ! V::intVal()->validate($data["stock_event"]) ) {
+            $hasError = true;
+            $_SESSION["message"]["error"]["stock_event"] = "Nilai wajib berupa bilangan bulat";
+        }
+
+        if ($hasError) {
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("invoice-item-add", ["item_id" => $args["item_id"]]));
+        }
 
         /* Attempt to retrieve the item from the cart. Will be used to decide whether to update if the item already exist or to add if it isn't. */
         $old_transaction_item = TransactionItem::where("transaction_id", $_SESSION["cart_id"])
@@ -299,8 +341,43 @@ class InvoiceController extends BaseController
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
     }
 
+    public function transactionList ($request, $response, $args)
+    {
+        $transactions = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
+            ->select(
+                "clerks.name",
+                "t.id",
+                "t.datetime",
+                Capsule::raw("(SELECT SUM(ti.price * (ti.stock_store + ti.stock_warehouse + ti.stock_event)) FROM transaction_items AS ti WHERE ti.transaction_id = t.id) AS price_sum")
+            )
+            ->where("is_finished", 1)
+            ->orderBy("t.datetime", "desc")
+            ->get();
+
+        return $this->view->render($response, "invoice/transaction_list.twig", ["transactions" => $transactions]);
+    }
+
     public function transactionDetail ($request, $response, $args)
     {
-        
+        $transaction = Transaction::leftJoin("clerks", "transactions.clerk_id", "=", "clerks.id")
+            ->select("transactions.id", "datetime", "clerks.name")
+            ->where("transactions.id", $args["id"])
+            ->first();
+
+        /* Format transaction date */
+        Date::setLocale('id');
+        $date = new Date($transaction->datetime);
+        $transaction->datetime = $date->format("j F Y - h:i");
+        $transaction->h_datetime = $date->diffForHumans();
+
+        $transaction_items = TransactionItem::where("transaction_id", $args["id"])->get();
+
+        /* Calculate total sum (sum of price * quantity) */
+        $sum = TransactionItem::where("transaction_id", $args["id"])
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
+
+        return $this->view->render($response, "invoice/transaction_detail.twig",
+            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum]
+        );
     }
 }
