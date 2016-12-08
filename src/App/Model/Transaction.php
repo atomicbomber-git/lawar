@@ -13,6 +13,6 @@ class Transaction extends Model
 
     /* Fields that can be mass filled */
     public $fillable = [
-        "customer_name", "customer_phone", "clerk_id", "datetime", "is_finished"
+        "clerk_id", "datetime", "is_finished"
     ];
 }

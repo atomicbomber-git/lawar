@@ -45,6 +45,11 @@
 
         {#  Admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" %}
+            <a class="btn btn-default btn-block" href="{{ path_for("invoice-transaction-list") }}">
+                <span class="glyphicon glyphicon-list-alt"> </span>
+                Catatan Transaksi 
+            </a>
+
             <a class="btn btn-default btn-block" href="{{ path_for("user-manage") }}">
                 <span class="glyphicon glyphicon-user"> </span>
                 Kelola Akun 

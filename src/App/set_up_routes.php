@@ -38,11 +38,6 @@ $app->group("/inventory", function () use ($container) {
 
     $this->get("/debug", "InventoryController:debug");
 
-    /* These routes apply universally to any TransactionItems*/
-    $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
-    $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
-    $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
-
     /* URLs accessible only by user with ADMIN or MANAGER privilege */
     $this->group("", function () use ($container) {
         
@@ -71,7 +66,6 @@ $app->group("/inventory", function () use ($container) {
     /* URLs accessible only by user with ADMIN privilege */
     $this->group("", function () use ($container) {
         $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
-        $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
     })->add(new AdminOnlyMiddleware($container));
 
 })->add(new LoggedInMiddleware($container));
@@ -80,6 +74,12 @@ $app->group("/user", function() {
     $this->get("/signup", "UserController:signup")->setName("user-signup");
     $this->post("/signup", "UserController:processSignup")->setName("user-process-signup");
     $this->get("/manage", "UserController:manage")->setName("user-manage");
+    $this->get("/edit/{id}", "UserController:edit")->setName("user-edit");
+    $this->post("/edit/{id}", "UserController:processEdit")->setName("user-process-edit");
+    $this->get("/editPassword/{id}", "UserController:editPassword/")->setName("user-edit-password");
+    $this->post("/editPassword/{id}", "UserController:processEditPassword")->setName("user-process-edit-password");
+    $this->get("/delete/{id}", "UserController:delete")->setName("user-delete");
+    $this->post("/delete/{id}", "UserController:processDelete")->setName("user-process-delete");
 })->add(new LoggedInMiddleware($container));
 
 $app->group("/invoice", function () {
@@ -87,6 +87,17 @@ $app->group("/invoice", function () {
     /* These routes deal with the current active shopping cart / invoice */
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
     $this->post("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
+    $this->get("/cart/finished", "InvoiceController:cartFinished")->setName("cart-finished");
+
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
+    $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
     $this->get("/transaction_item/delete/{item_id}", "InvoiceController:deleteTransactionItem")->setName("invoice-item-delete");
+    $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
+    $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
+
+    $this->group("", function () use ($container) {
+        $this->get("/transaction_list", "InvoiceController:transactionList")->setName("invoice-transaction-list");
+        $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
+    })->add(new AdminOnlyMiddleware($container));
+
 })->add(new LoggedInMiddleware($container));

@@ -1,0 +1,78 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Detail Transaksi {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p {
+            margin-bottom: 2px;
+            font-size: 9pt;
+        }
+
+        p.header {
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {# Navbar #}
+    {% include 'general/navbar.twig'%}
+
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+
+            <legend> Detail Transaksi </legend>
+
+            <div class="well well-sm">
+                <a href="{{ path_for('invoice-transaction-list') }}" class="btn btn-warning btn-xs">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    Kembali
+                </a>
+            </div>
+
+            <div class="well well-sm">
+                <p class="header"> ID Transaksi: </p>
+                <p class="content"> {{ transaction.id }} </p>
+
+                <p class="header"> Tanggal dan Waktu: </p>
+                <p class="content"> {{ transaction.datetime }}, {{ transaction.h_datetime }} </p>
+
+                <p class="header"> Karyawan: </p>
+                <p class="content"> {{ transaction.name }} </p>
+
+                <p class="header"> Total Harga: </p>
+                <p class="content"> Rp. {{ sum | number_format(2, ".", ",") }} </p>
+            </div>
+
+            <h4> Daftar Item Transaksi: </h4>
+
+            <div class="list-group">
+                {% for item in transaction_items %}
+                    <div class="list-group-item">
+                        <p class="header"> Nama Item: </p>
+                        <p class="content"> {{ item.name }} </p>
+
+                        <p class="header"> Harga per Item: </p>
+                        <p class="content"> Rp. {{ item.price | number_format(2, ".", ",") }} </p>
+
+                        <p class="header"> Jumlah: </p>
+                        <p class="content"> {{ item.stock_store + item.stock_warehouse + item.stock_event }} </p>
+
+                        <p class="header"> Total: </p>
+                        <p class="content">
+                            Rp.
+                            {{ (item.price * (item.stock_store + item.stock_warehouse + item.stock_event)) | number_format(2, ".", ",") }}
+                        </p>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+        </fieldset>
+
+    </div>
+
+{% endblock %}

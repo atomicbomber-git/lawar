@@ -1,0 +1,60 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Detail Transaksi {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p {
+            margin-bottom: 2px;
+        }
+
+        p.header {
+            font-weight: bold;
+        }
+
+        .list-group-item {
+            font-size: 8pt;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    {# Navbar #}
+    {% include 'general/navbar.twig'%}
+
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+
+            <legend> Daftar Transaksi </legend>
+
+            <div class="list-group">
+                {% for transaction in transactions %}
+                    <div class="list-group-item">
+                        <p class="header"> ID Transaksi: </p>
+                        <p> {{ transaction.id }} </p>
+                        <p class="header"> Tanggal dan Waktu: </p>
+                        <p> {{ transaction.datetime }} </p>
+                        <p class="header"> Karyawan: </p>
+                        <p> {{ transaction.name }} </p>
+                        <p class="header"> Total Harga: </p>
+                        <div class="pull-right">
+                            <a class="btn btn-info btn-xs" href="{{ path_for("invoice-transaction-detail", {"id": transaction.id}) }}">
+                                <span class="glyphicon glyphicon-list-alt"> </span>
+                                Detail
+                            </a>
+                        </div>
+                        <p> Rp. {{ transaction.price_sum | number_format(2, ".", ".") }} </p>
+                        
+                    </div>
+
+                {% endfor %}
+            </div>
+
+        </fieldset>
+
+    </div>
+
+{% endblock %}

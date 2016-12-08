@@ -1,0 +1,105 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Sunting Akun {% endblock %}
+
+{% block head_extra %}
+    <style>
+        fieldset {
+            margin-bottom: 30px;
+        }
+
+        .alert {
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig'%}
+    
+    <div class="container">
+        <div class="spacer"></div>
+
+        <div class="well well-sm">
+            <a href="{{ path_for('user-manage') }}" class="btn btn-warning btn-xs">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                Kembali
+            </a>
+        </div>
+
+        <fieldset>
+            <legend> Sunting Data Akun </legend>
+            <form action="{{ path_for("user-process-edit", {"id": clerk.id }) }}" method="POST">
+                <div class="form-group {% if message.error.username %} has-error {% endif %}">
+                    <label class="control-label"> Nama Pengguna: </label>
+                    <input class="form-control" type="text" name="username" placeholder="Nama Pengguna" value="{{ clerk.username }}">
+                    {% if message.error.username %} <span class="help-block"> {{ message.error.username }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.name %} has-error {% endif %}">
+                    <label class="control-label"> Nama Asli: </label>
+                    <input class="form-control" type="text" name="name" placeholder="Nama Asli" value="{{ clerk.name }}">
+                    {% if message.error.name %} <span class="help-block"> {{ message.error.name }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.phone %} has-error {% endif %}">
+                    <label class="control-label"> Nomor Telepon: </label>
+                    <input class="form-control" type="phone" name="phone" placeholder="Nomor Telepon"  value="{{ clerk.phone }}">
+                    {% if message.error.phone %} <span class="help-block"> {{ message.error.phone }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.privilege %} has-error {% endif %}">
+                    <label class="control-label"> Status User: </label>
+                    <select name="privilege" class="form-control">
+                        <option {% if clerk.privilege == "SHOPKEEPER" %} selected= {% endif %} value="SHOPKEEPER"> Shopkeeper </option>
+                        <option {% if clerk.privilege == "MANAGER" %} selected= {% endif %} value="MANAGER"> Manager </option>
+                        <option {% if clerk.privilege == "ADMINISTRATOR" %} selected= {% endif %} value="ADMINISTRATOR"> Administrator </option>
+                    </select>
+                    {% if message.error.privilege %} <span class="help-block"> {{ message.error.privilege }} </span> {% endif %}
+                </div>
+
+                <div style="text-align: right">
+                    <button class="btn btn-primary"> Ubah Data </button>
+                </div>
+
+                {% if message.success.userdata_changed %}
+                    <div class="alert alert-success"> {{ message.success.userdata_changed }} </div>
+                {% endif %}
+                
+            </form>
+        </fieldset>
+
+        <fieldset id="edit-password">
+            <legend> Ubah Kata Sandi </legend>
+
+            <form action="{{ path_for("user-process-edit-password", {"id": clerk.id}) }}" method="POST">
+                <div class="form-group {% if message.error.password %} has-error {% endif %}">
+                    <label class="control-label"> Kata Sandi: </label>
+                    <input class="form-control" type="password" name="password" placeholder="Kata Sandi">
+                    {% if message.error.password %} <span class="help-block"> {{ message.error.password }} </span> {% endif %}
+                </div>
+
+                <div class="form-group {% if message.error.password_retry %} has-error {% endif %}">
+                    <label class="control-label"> Ulangi Kata Sandi: </label>
+                    <input class="form-control" type="password" name="password_retry" placeholder="Ulangi Kata Sandi">
+                    {% if message.error.password_retry %} <span class="help-block"> {{ message.error.password_retry }} </span> {% endif %}
+                </div>
+
+                <div style="text-align: right">
+                    <button class="btn btn-primary"> Ubah </button>
+                </div>
+
+                {% if message.error.not_match %}
+                    <div class="alert alert-danger"> {{ message.error.not_match }} </div>
+                {% endif %}
+
+                {% if message.success.password_changed %}
+                    <div class="alert alert-success"> {{ message.success.password_changed }} </div>
+                {% endif %}
+            </form>
+
+        </fieldset>
+    </div>
+{% endblock %}
