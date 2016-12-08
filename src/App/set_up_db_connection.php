@@ -9,7 +9,7 @@ $capsule->addConnection([
     'host'      => 'localhost',
     'database'  => 'lawar',
     'username'  => 'root',
-    'password'  => '',
+    'password'  => 'alohomora',
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => '',
