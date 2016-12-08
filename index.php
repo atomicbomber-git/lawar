@@ -5,7 +5,7 @@ require __DIR__ . '/vendor/autoload.php';
 date_default_timezone_set('Asia/Pontianak');
 
 /* Start session */
-session_save_path("/tmp");
+// session_save_path("/tmp");
 session_start();
 
 $WEB_ROOT = __DIR__;
