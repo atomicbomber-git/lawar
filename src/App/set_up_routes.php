@@ -70,7 +70,7 @@ $app->group("/inventory", function () use ($container) {
 
 })->add(new LoggedInMiddleware($container));
 
-$app->group("/user", function() {
+$app->group("/user", function () use($container)  {
     $this->get("/signup", "UserController:signup")->setName("user-signup");
     $this->post("/signup", "UserController:processSignup")->setName("user-process-signup");
     $this->get("/manage", "UserController:manage")->setName("user-manage");
