@@ -82,7 +82,7 @@ $app->group("/user", function () use($container)  {
     $this->post("/delete/{id}", "UserController:processDelete")->setName("user-process-delete");
 })->add(new LoggedInMiddleware($container));
 
-$app->group("/invoice", function () {
+$app->group("/invoice", function () use($container) {
     /* --Routes pertaining the shopping cart functionality-- */
     /* These routes deal with the current active shopping cart / invoice */
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
