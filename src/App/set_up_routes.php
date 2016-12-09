@@ -60,13 +60,10 @@ $app->group("/inventory", function () use ($container) {
         $this->post("/type/edit/{type_id}", "InventoryController:processEditType")->setName("inventory-type-process-edit");
         $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
         $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
+
+        $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
         
     })->add(new ManagerOrAdminOnlyMiddleware($container));
-
-    /* URLs accessible only by user with ADMIN privilege */
-    $this->group("", function () use ($container) {
-        $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
-    })->add(new AdminOnlyMiddleware($container));
 
 })->add(new LoggedInMiddleware($container));
 
