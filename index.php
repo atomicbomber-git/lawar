@@ -8,7 +8,7 @@ date_default_timezone_set('Asia/Pontianak');
 session_save_path("/tmp");
 session_start();
 
-$WEB_ROOT = __DIR__;
+$GLOBALS["WEB_ROOT"] = __DIR__;
 
 use Slim\App as Slim;
 

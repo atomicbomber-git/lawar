@@ -31,6 +31,15 @@
         <fieldset>
             <legend> Catatan Keuangan Toko </legend>
 
+            <div class="well well-sm">
+                <h4>
+                    <strong>
+                        Jumlah uang di kasir sekarang:
+                        <label class="label label-primary"> Rp. {{ cash | number_format(2, ".", ",") }} </label>
+                    </strong>
+                </h4>
+            </div>
+
             <div class="list-group">
                 {% for record in cash_history %}
                     <div class="list-group-item">

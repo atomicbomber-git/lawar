@@ -10,9 +10,11 @@ use Respect\Validation\Validator as V;
 
 class InventoryController extends BaseController
 {
-    public function debug ()
+    public function debug ($request, $response)
     {
-        return "Success.";
+        // echo $WEB_ROOT;
+
+
     }
 
     public function home ($request, $response)
@@ -290,6 +292,12 @@ class InventoryController extends BaseController
 
     public function ledger ($request, $response)
     {
+        /* Load current cash data */
+        $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
+        $cash_file = file_get_contents($file_path);
+        $cash_data = json_decode($cash_file);
+        $cash_amount = $cash_data->cash;
+
         $cash_history = CashHistory::orderBy("datetime", "desc")
             ->limit(10)
             ->get();
@@ -305,6 +313,7 @@ class InventoryController extends BaseController
             $record->h_datetime = $date->diffForHumans();
         }
 
-        return $this->view->render($response, "inventory/ledger.twig", ["cash_history" => $cash_history]);
+        return $this->view->render($response, "inventory/ledger.twig",
+            ["cash_history" => $cash_history, "cash" => $cash_amount]);
     }
 }
