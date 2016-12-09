@@ -34,7 +34,7 @@ CREATE TABLE `cash_history` (
   KEY `cash_history_clerks` (`clerk_id`),
   CONSTRAINT `cash_history_clerks` FOREIGN KEY (`clerk_id`) REFERENCES `clerks` (`id`) ON DELETE SET NULL,
   CONSTRAINT `cash_history_transactions` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `cash_history` (
 
 LOCK TABLES `cash_history` WRITE;
 /*!40000 ALTER TABLE `cash_history` DISABLE KEYS */;
-INSERT INTO `cash_history` VALUES (14,23,40000,'Transaksi jual beli.',45,'2016-12-08 08:22:11'),(15,17,30000,'Transaksi jual beli.',47,'2016-12-08 09:51:01'),(16,17,60000,'Transaksi jual beli.',48,'2016-12-08 10:31:49'),(17,17,90000,'Transaksi jual beli.',49,'2016-12-08 10:34:45'),(18,17,30000,'Transaksi jual beli.',50,'2016-12-08 10:39:54'),(19,17,150000,'Transaksi jual beli.',51,'2016-12-08 12:28:48'),(20,18,120000,'Transaksi jual beli.',53,'2016-12-08 12:37:48');
+INSERT INTO `cash_history` VALUES (14,23,40000,'Transaksi jual beli.',45,'2016-12-08 08:22:11'),(15,17,30000,'Transaksi jual beli.',47,'2016-12-08 09:51:01'),(16,17,60000,'Transaksi jual beli.',48,'2016-12-08 10:31:49'),(17,17,90000,'Transaksi jual beli.',49,'2016-12-08 10:34:45'),(18,17,30000,'Transaksi jual beli.',50,'2016-12-08 10:39:54'),(19,17,150000,'Transaksi jual beli.',51,'2016-12-08 12:28:48'),(20,18,120000,'Transaksi jual beli.',53,'2016-12-08 12:37:48'),(21,23,100000,'Makan',NULL,'2016-12-09 09:18:06');
 /*!40000 ALTER TABLE `cash_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,7 @@ CREATE TABLE `transaction_items` (
   PRIMARY KEY (`id`),
   KEY `transaction_items_transactions` (`transaction_id`),
   CONSTRAINT `transaction_items_transactions` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `transaction_items` (
 
 LOCK TABLES `transaction_items` WRITE;
 /*!40000 ALTER TABLE `transaction_items` DISABLE KEYS */;
-INSERT INTO `transaction_items` VALUES (67,41,45,'Item number 8.','Whatever 8','XL',10000,'Sepatu',0,4,0),(68,41,47,'Item number 8.','Whatever 8','XL',10000,'Sepatu',0,3,0),(69,42,48,'Item number 9.','Whatever 9','XL',10000,'Sepatu',0,6,0),(70,45,49,'Item number 12.','Whatever 12','XL',10000,'Sepatu',0,9,0),(71,42,50,'Item number 9.','Whatever 9','XL',10000,'Sepatu',0,3,0),(72,43,51,'Item number 10.','Whatever 10','XL',10000,'Sepatu',6,0,0),(73,48,51,'Item number 15.','Whatever 15','XL',10000,'Sepatu',9,0,0),(74,42,53,'Item number 9.','Whatever 9','XL',10000,'Sepatu',12,0,0);
+INSERT INTO `transaction_items` VALUES (67,41,45,'Item number 8.','Whatever 8','XL',10000,'Sepatu',0,4,0),(68,41,47,'Item number 8.','Whatever 8','XL',10000,'Sepatu',0,3,0),(69,42,48,'Item number 9.','Whatever 9','XL',10000,'Sepatu',0,6,0),(70,45,49,'Item number 12.','Whatever 12','XL',10000,'Sepatu',0,9,0),(71,42,50,'Item number 9.','Whatever 9','XL',10000,'Sepatu',0,3,0),(72,43,51,'Item number 10.','Whatever 10','XL',10000,'Sepatu',6,0,0),(73,48,51,'Item number 15.','Whatever 15','XL',10000,'Sepatu',9,0,0),(74,42,53,'Item number 9.','Whatever 9','XL',10000,'Sepatu',12,0,0),(75,30,52,'Baju Mantep','When in the course of human events it becomes necessary for one people to dissolve the political bands which have connected them with another and to assume among the Powers','XL',20000,'Sepatu',20,0,0),(76,31,46,'Baju Keren','When I was younger that so much younger than todaaay\r\n','1212',11212,'Sweater',0,4,0);
 /*!40000 ALTER TABLE `transaction_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,4 +205,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-08 12:43:54
+-- Dump completed on 2016-12-09 19:42:15
