@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
     This file is intended to be require_once'd by index.php where an instance of
     Slim\App has been instantiated.
 */
@@ -25,7 +25,7 @@ $app->get("/auth_error", "AuthenticationController:authError")
     ->setName("autherror")
     ->add(new LoggedInMiddleware($container));
 
-$app->group("/inventory", function () use ($container) {
+$app->group("/inventory", function() use ($container) {
 
     /* Can only log out if you're logged in, duh */
     $this->get("/logout", "AuthenticationController:logout")->setName("logout");
@@ -36,11 +36,12 @@ $app->group("/inventory", function () use ($container) {
     $this->get("/filtered", "InventoryController:filtered")->setName("inventory-filtered");
     $this->get("/search", "InventoryController:searchItem")->setName("inventory-item-search");
 
+    /* Debug route, TODO: delete this when you're ready to deploy */
     $this->get("/debug", "InventoryController:debug");
 
     /* URLs accessible only by user with ADMIN or MANAGER privilege */
-    $this->group("", function () use ($container) {
-        
+    $this->group("", function() use ($container) {
+
         /* Cash register related */
         $this->get("/cash_register", "InventoryController:cashRegister")->setName("cash_register");
         $this->post("/cash_register/add_history", "InventoryController:addCashHistory")->setName("cash_register-add_history");
@@ -62,12 +63,12 @@ $app->group("/inventory", function () use ($container) {
         $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
 
         $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
-        
+
     })->add(new ManagerOrAdminOnlyMiddleware($container));
 
 })->add(new LoggedInMiddleware($container));
 
-$app->group("/user", function () use($container)  {
+$app->group("/user", function() use($container)  {
     $this->get("/signup", "UserController:signup")->setName("user-signup");
     $this->post("/signup", "UserController:processSignup")->setName("user-process-signup");
     $this->get("/manage", "UserController:manage")->setName("user-manage");
@@ -79,7 +80,7 @@ $app->group("/user", function () use($container)  {
     $this->post("/delete/{id}", "UserController:processDelete")->setName("user-process-delete");
 })->add(new LoggedInMiddleware($container));
 
-$app->group("/invoice", function () use($container) {
+$app->group("/invoice", function() use($container) {
     /* --Routes pertaining the shopping cart functionality-- */
     /* These routes deal with the current active shopping cart / invoice */
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
@@ -92,7 +93,7 @@ $app->group("/invoice", function () use($container) {
     $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
     $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
 
-    $this->group("", function () use ($container) {
+    $this->group("", function() use ($container) {
         $this->get("/transaction_list", "InvoiceController:transactionList")->setName("invoice-transaction-list");
         $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
     })->add(new AdminOnlyMiddleware($container));
