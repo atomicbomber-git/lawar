@@ -48,15 +48,15 @@
                         <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Item </a>
                     </li>
 
+                    <li>
+                        <a href="{{ path_for('ledger-input') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
+                    </li>
+
                     {% if user.privilege == "ADMINISTRATOR" %}
-                        <li>
-                            <a href="{{ path_for('ledger-input') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
-                        </li>
-
                         <li>
                             <a href="{{ path_for("user-manage") }}"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
                         </li>
