@@ -146,8 +146,6 @@ class InvoiceController extends BaseController
             $item->decrement("stock_store", $transaction_item->stock_store );
             $item->decrement("stock_warehouse", $transaction_item->stock_warehouse );
             $item->decrement("stock_event", $transaction_item->stock_event );
-
-            /* TODO: Store item transfer history */
         }
 
         /* Mark cart / transaction invoice as finished, so the next time the user log ins, she'll get a brand new empty cart */
@@ -316,7 +314,7 @@ class InvoiceController extends BaseController
 
     public function processEditTransactionItem ($request, $response, $args)
     {
-    
+
         $data = $request->getParsedBody();
 
         /* Validate */
@@ -379,5 +377,15 @@ class InvoiceController extends BaseController
         return $this->view->render($response, "invoice/transaction_detail.twig",
             ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum]
         );
+    }
+
+    /* TODO: Implement cart return warning display feature */
+    public function cartReturn($request, $response, $args) {
+
+    }
+
+    /* TODO: Implement cart return functionality */
+    public function processCartReturn($request, $response, $args) {
+
     }
 }

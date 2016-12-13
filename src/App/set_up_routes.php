@@ -86,6 +86,8 @@ $app->group("/invoice", function() use($container) {
     $this->get("/cart/display", "InvoiceController:cartDisplay")->setName("cart");
     $this->post("/cart/finish", "InvoiceController:cartFinish")->setName("cart-finish");
     $this->get("/cart/finished", "InvoiceController:cartFinished")->setName("cart-finished");
+    $this->get("/cart/return/{id}", "InvoiceController:cartReturn")->setName("cart-return");
+    $this->post("/cart/return/{id}", "InvoiceController:processCartReturn")->setName("cart-process-return");
 
     $this->get("/transaction_item/add/{item_id}", "InvoiceController:addTransactionItem")->setName("invoice-item-add");
     $this->post("/transaction_item/add/{item_id}", "InvoiceController:processAddTransactionItem")->setName("invoice-item-process-add");
