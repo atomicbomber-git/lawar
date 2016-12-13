@@ -13,8 +13,6 @@ class InventoryController extends BaseController
     public function debug ($request, $response)
     {
         // echo $WEB_ROOT;
-
-
     }
 
     public function home ($request, $response)
@@ -125,12 +123,12 @@ class InventoryController extends BaseController
         if ( ! V::numeric()->min(0)->validate($data["stock_store"]) ) {
             $has_error = true;
             $_SESSION["message"]["form_error"]["stock_store"] = "Data minimal bernilai 0";
-        } 
+        }
 
         if ( ! V::numeric()->min(0)->validate($data["stock_warehouse"]) ) {
             $has_error = true;
             $_SESSION["message"]["form_error"]["stock_warehouse"] = "Data minimal bernilai 0";
-        } 
+        }
 
         if ( ! V::notEmpty()->validate($data["entry_date"]) ) {
             $has_error = true;
@@ -182,7 +180,7 @@ class InventoryController extends BaseController
     {
         $item = Item::find($args["item_id"]);
         return $this->view->render($response, "inventory/item_delete.twig", ["item" => $item]);
-    } 
+    }
 
     public function processDeleteItem ($request, $response, $args)
     {
@@ -271,7 +269,7 @@ class InventoryController extends BaseController
     }
 
     public function addCashHistory ($request, $response)
-    { 
+    {
         $data = $request->getParsedBody();
 
         /* TODO: Validation */
