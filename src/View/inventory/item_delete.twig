@@ -25,7 +25,7 @@
             <p class="item-header"> Nama Barang: </p>
             <p> {{ item.name }} </p>
             <p class="item-header"> Deskripsi Barang: </p>
-            <p> {{ item.description }} </p>  
+            <p> {{ item.description }} </p>
             <p class="item-header"> Ukuran Barang: </p>
             <p> {{ item.size }} </p>
             <p class="item-header"> Tipe Barang: </p>
@@ -39,7 +39,7 @@
 
         <form action="{{ path_for('inventory-item-process-delete', {'item_id': item.id}) }}" method="POST">
             <div style="text-align: right">
-                <a href="{{ path_for('inventory') }}" class="btn btn-secondary"> Kembali </a>
+                <a href="{{ path_for('inventory') }}?page={{ return_page }}" class="btn btn-secondary"> Kembali </a>
                 <button class="btn btn-danger"> Hapus Data </button>
             </div>
         </form>

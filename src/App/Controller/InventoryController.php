@@ -44,6 +44,18 @@ class InventoryController extends BaseController
 
     public function filtered ($request, $response) {
 
+        /* Amount of items to be displayed in a single page */
+        $items_per_page = 5;
+
+        /* Get page from the query string */
+        $page = $request->getQueryParam("page");
+
+        /* Validate the page query parameter */
+        if ( ! V::intVal()->min(1)->validate($page) ) {
+            /* Invalid page parameter */
+            $page = 1;
+        }
+
         $keyword = $request->getQueryParam("keyword");
         $filter_type = $request->getQueryParam("filter_type");
 
@@ -60,38 +72,56 @@ class InventoryController extends BaseController
 
             $items = Item::with("type")
                 ->having($filter_type, "LIKE", "%$keyword%")
+                ->offset( ($page - 1) * $items_per_page)
+                ->limit($items_per_page)
                 ->get();
 
-        }
+            $count = Item::with("type")
+                ->where($filter_type, "LIKE", "%$keyword%")
+                ->count();
+            }
         else {
             $items = Item::with("type")
                 ->whereHas("type", function ($query) use ($keyword) {
                     $query->where("name", "LIKE", "%$keyword%");
                 })
+                ->offset( ($page - 1) * $items_per_page)
+                ->limit($items_per_page)
                 ->get();
+
+            $count = Item::with("type")
+                ->whereHas("type", function ($query) use ($keyword) {
+                    $query->where("name", "LIKE", "%$keyword%");
+                })
+                ->count();
         }
+
+        $pagination = $this->getPagination($count, $items_per_page, $page);
 
         /* Search params to be shown as alert in the result page */
         $search_params["keyword"] = $keyword;
+        $search_params["filter_type"] = $filter_type;
         switch ($filter_type) {
             case "name":
-                $search_params["filter_type"] = "nama";
+                $search_params["filter_type_view"] = "nama";
                 break;
 
             case "size":
-                $search_params["filter_type"] = "ukuran";
+                $search_params["filter_type_view"] = "ukuran";
                 break;
 
             case "type":
-                $search_params["filter_type"] = "tipe";
+                $search_params["filter_type_view"] = "tipe";
                 break;
 
             case "type":
-                $search_params["filter_type"] = "deskripsi";
+                $search_params["filter_type_view"] = "deskripsi";
                 break;
         }
 
-        return $this->view->render($response, "inventory/inventory_filtered.twig", ["items" => $items, "search_params" => $search_params]);
+        return $this->view->render($response, "inventory/inventory_filtered.twig",
+            ["items" => $items, "search_params" => $search_params, "pagination" => $pagination]
+        );
     }
 
     public function searchItem ($request, $response) {
@@ -108,6 +138,8 @@ class InventoryController extends BaseController
 
     public function addItem ($request, $response)
     {
+        $return_page = $request->getQueryParam("return_page");
+
         $message = null;
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
@@ -119,7 +151,7 @@ class InventoryController extends BaseController
 
         $types = Type::get();
         return $this->view->render($response, "inventory/item_add.twig",
-            ["types" => $types, "message" => $message, "current_date" => $current_date]
+            ["types" => $types, "message" => $message, "current_date" => $current_date, "return_page" => $return_page]
         );
     }
 
@@ -164,8 +196,9 @@ class InventoryController extends BaseController
 
     public function editItem ($request, $response, $args)
     {
-        $message = null;
+        $return_page = $request->getQueryParam("return_page");
 
+        $message = null;
         /* Retrieve messages that were stored in the session */
         if ( isset($_SESSION["message"] ) ) {
             $message = $_SESSION["message"];
@@ -177,7 +210,9 @@ class InventoryController extends BaseController
         /* List of all available types to be displayed in <select> tag */
         $types = Type::get();
 
-        return $this->view->render($response, "inventory/item_edit.twig", ["item" => $item, "types" => $types, "message" => $message]);
+        return $this->view->render($response, "inventory/item_edit.twig",
+            ["item" => $item, "types" => $types, "message" => $message, "return_page" => $return_page]
+        );
     }
 
     public function processEditItem ($request, $response, $args)
@@ -192,8 +227,10 @@ class InventoryController extends BaseController
 
     public function deleteItem ($request, $response, $args)
     {
+        $return_page = $request->getQueryParam("return_page");
+
         $item = Item::find($args["item_id"]);
-        return $this->view->render($response, "inventory/item_delete.twig", ["item" => $item]);
+        return $this->view->render($response, "inventory/item_delete.twig", ["item" => $item, "return_page" => $return_page]);
     }
 
     public function processDeleteItem ($request, $response, $args)

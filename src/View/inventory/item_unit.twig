@@ -1,6 +1,6 @@
 <li class="list-group-item">
     <div style="text-align: right">
-        
+
     </div>
 
     <div class="well well-sm item-unit" style="padding: 2px 10px 2px 10px">
@@ -27,12 +27,12 @@
             <span style="display: inline-block" class="label label-primary"> Gudang: {{ item.stock_warehouse | upper }} </span>
             <span style="display: inline-block" class="label label-primary"> Event: {{ item.stock_event | upper }} </span>
         </div>
-            
+
         <p style="margin-top: 15px">
             {% if item.description %}
                 "{{ item.description }}"
             {% endif %}
-        </p>                   
+        </p>
     </div>
 
     {% block control_add %} {% endblock %}
