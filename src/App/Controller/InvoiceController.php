@@ -231,6 +231,11 @@ class InvoiceController extends BaseController
             $_SESSION["message"]["error"]["stock_event"] = "Nilai wajib berupa bilangan bulat";
         }
 
+        if ( ! V::min(1)->validate( $data["stock_store"] + $data["stock_warehouse"] + $data["stock_event"] ) ) {
+            $hasError = true;
+            $_SESSION["message"]["error"]["min_stock"] = "Jumlah minimal pembelian adalah satu (1) item";
+        }
+
         if ($hasError) {
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("invoice-item-add", ["item_id" => $args["item_id"]]));
         }
@@ -381,11 +386,57 @@ class InvoiceController extends BaseController
 
     /* TODO: Implement cart return warning display feature */
     public function cartReturn($request, $response, $args) {
+        $transaction = Transaction::leftJoin("clerks", "transactions.clerk_id", "=", "clerks.id")
+            ->select("transactions.id", "datetime", "clerks.name")
+            ->where("transactions.id", $args["id"])
+            ->first();
 
+        /* Format transaction date */
+        Date::setLocale('id');
+        $date = new Date($transaction->datetime);
+        $transaction->datetime = $date->format("j F Y - h:i");
+        $transaction->h_datetime = $date->diffForHumans();
+
+        $transaction_items = TransactionItem::where("transaction_id", $args["id"])->get();
+
+        /* Calculate total sum (sum of price * quantity) */
+        $sum = TransactionItem::where("transaction_id", $args["id"])
+            ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
+
+        return $this->view->render($response, "invoice/transaction_detail.twig",
+            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum, "is_return" => true]
+        );
     }
 
     /* TODO: Implement cart return functionality */
     public function processCartReturn($request, $response, $args) {
 
+        /* Retrieve transaction items and delete them */
+        $transaction_items = TransactionItem::where("transaction_id", $args["id"])->get();
+
+        foreach ($transaction_items as $transaction_item) {
+
+            /* Get the Item record stored in the items table */
+            $item = Item::find( $transaction_item->item_id );
+
+            /*
+                If found, increment the amount of available stock accordingly
+                There's always a risk of an item not being found since the administrator may have deleted the item before
+                this procedure is ran.
+            */
+            if ( $item ) {
+                $item->increment("stock_store", $transaction_item->stock_store );
+                $item->increment("stock_warehouse", $transaction_item->stock_warehouse );
+                $item->increment("stock_event", $transaction_item->stock_store );
+            }
+
+            $transaction_item->delete();
+        }
+
+        $cash_history = CashHistory::find("transaction_id", $args["id"]);
+        $cash_history->delete();
+
+        $transaction = Transaction::find($args["id"]);
+        $transaction->delete();
     }
 }

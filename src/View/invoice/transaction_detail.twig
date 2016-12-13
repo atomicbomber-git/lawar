@@ -24,7 +24,9 @@
 
         <fieldset>
 
-            <legend> Detail Transaksi </legend>
+            <legend>
+                {% if not is_return %} Detail Transaksi {% else %} Retur Transaksi {% endif %}
+            </legend>
 
             <div class="well well-sm">
                 <a href="{{ path_for('invoice-transaction-list') }}" class="btn btn-warning btn-xs">
@@ -32,6 +34,24 @@
                     Kembali
                 </a>
             </div>
+
+            {% if is_return %}
+                <div class="well well-sm">
+                    <form action="{{ path_for("cart-process-return", {"id": transaction.id}) }}" method="POST">
+                        <div class="alert alert-danger">
+                            Anda yakin hendak melakukan retur (pengembalian) terhadap pesanan ini?
+                            Catatan transaksi akan dihapus, jumlah stock akan dikembalikan sesuai dengan jumlah item pembelian
+                            serta uang kas akan ditambahkan sesuai dengan harga total transaksi ini.
+                        </div>
+                        <div class="text-right">
+                            <button class="btn btn-danger btn-sm">
+                                Setujui Retur
+                                <span class="glyphicon glyphicon-ok"> </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
 
             <div class="well well-sm">
                 <p class="header"> ID Transaksi: </p>

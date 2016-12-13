@@ -45,9 +45,16 @@
                                 <span class="glyphicon glyphicon-list-alt"> </span>
                                 Detail
                             </a>
+
+                            <!-- TODO: Change icon! -->
+                            <a class="btn btn-warning btn-xs" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                                <span class="glyphicon glyphicon-list-alt"> </span>
+                                Retur
+                            </a>
+
                         </div>
                         <p> Rp. {{ transaction.price_sum | number_format(2, ".", ".") }} </p>
-                        
+
                     </div>
 
                 {% endfor %}
