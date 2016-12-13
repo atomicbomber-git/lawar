@@ -22,10 +22,24 @@ class InventoryController extends BaseController
 
     public function all ($request, $response)
     {
-        $items = Item::limit(10)
+        /* Get page from the query string */
+        $page = $request->getQueryParam("page");
+
+        if ( ! V::intVal()->min(1)->validate($page) ) {
+            /* Invalid page parameter */
+            $page = 1;
+        }
+
+        $items_per_page = 5;
+
+        $items = Item::limit($items_per_page)
+            ->offset( ($page - 1) * $items_per_page)
             ->orderBy("entry_date")
             ->get();
-        return $this->view->render($response, "inventory/inventory.twig", ["items" => $items]);
+
+        $pagination = $this->getPagination(Item::count(), $items_per_page, $page);
+
+        return $this->view->render($response, "inventory/inventory.twig", ["items" => $items, "pagination" => $pagination]);
     }
 
     public function filtered ($request, $response) {
