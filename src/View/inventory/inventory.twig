@@ -31,13 +31,50 @@
 
     <div class="container">
 
-        <div style="height: 60px"></div>
+        <div class="spacer"></div>
+
+        <div class="alert alert-info">
+            Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
+            seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
+        </div>
 
         <ul class="list-group">
             {% for item in items %}
                 {% include 'inventory/item_unit_manage.twig' %}
             {% endfor %}
         </ul>
+
+        <nav>
+            <ul class="pager">
+                {% if pagination.prev_page %}
+                    <li class="previous">
+                        <a href="{{ path_for("inventory") }}?page={{ pagination.prev_page }}">
+                            &larr; Sebelumnya
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="previous disabled">
+                        <a href="{{ path_for("inventory") }}?page={{ pagination.prev_page }}">
+                            &larr; Sebelumnya
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if pagination.next_page %}
+                    <li class="next">
+                        <a href="{{ path_for("inventory") }}?page={{ pagination.next_page }}">
+                            Selanjutnya &rarr;
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="next disabled">
+                        <a href="{{ path_for("inventory") }}?page={{ pagination.next_page }}">
+                            Selanjutnya &rarr;
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
-    
+
 {% endblock %}
