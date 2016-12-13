@@ -18,7 +18,7 @@ class UserController extends BaseController
             unset( $_SESSION["message"] );
         }
 
-        $users = Clerk::select("username", "phone", "privilege", "id")->get();
+        $users = Clerk::select("name", "privilege", "id")->get();
         return $this->view->render($response, "user/user_manage.twig", ["users" => $users, "message" => $message]);
     }
 
@@ -34,7 +34,7 @@ class UserController extends BaseController
     }
 
     public function processSignup ($request, $response)
-    {   
+    {
         $data = $request->getParsedBody();
 
         /* Don't allow any of the signup form fields to be empty */

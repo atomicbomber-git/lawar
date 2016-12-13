@@ -20,7 +20,7 @@
         <div class="spacer"></div>
 
         <div class="well well-sm">
-            <h3> Selamat datang, {{ user.username }}! </h3>
+            <h3> Selamat datang, <strong>{% if user.name %} {{ user.name }} {% else %} {{ user.username }} {% endif %}</strong>! </h3>
 
             <p> Status Anda adalah: <span class="label label-danger"> {{ user.privilege | upper }} </span> </p>
         </div>
