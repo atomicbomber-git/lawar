@@ -45,6 +45,13 @@ class BaseController
             $has_items = false;
         }
 
+        $item_end = $offset + $items_per_page;
+
+        if ($item_end > $total_items) {
+            /* Prevent item_end from exceeding the amount of items */
+            $item_end = $total_items;
+        }
+
         return [
             "has_items" => $has_items,
             "total_items" => $total_items,
@@ -52,7 +59,7 @@ class BaseController
             "next_page" => $next_page,
             "prev_page" => $prev_page,
             "item_begin" => $offset + 1,
-            "item_end" => $offset + $items_per_page
+            "item_end" => $item_end
         ];
     }
 }

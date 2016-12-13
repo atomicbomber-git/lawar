@@ -4,7 +4,7 @@
 
 {% block head_extra %}
     <style>
-    
+
         .list-group-item {
             height: 60px;
         }
@@ -27,34 +27,34 @@
 
         <a class="btn btn-default btn-block" href="{{ path_for("inventory") }}">
             <span class="glyphicon glyphicon-list"> </span>
-            Daftar Item 
+            Daftar Item
         </a>
 
         <a class="btn btn-default btn-block" href="{{ path_for("inventory-item-search") }}">
             <span class="glyphicon glyphicon-search"> </span>
-            Pencarian Item 
+            Pencarian Item
         </a>
 
         {#  Manager and admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
-            
+
         {% endif %}
 
         {#  Admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" %}
-            <a class="btn btn-default btn-block" href="{{ path_for("ledger") }}">
+            <a class="btn btn-default btn-block" href="{{ path_for("ledger-input") }}">
                 <span class="glyphicon glyphicon-book"> </span>
-                Catatan Keuangan 
+                Catatan Keuangan
             </a>
-            
+
             <a class="btn btn-default btn-block" href="{{ path_for("invoice-transaction-list") }}">
                 <span class="glyphicon glyphicon-list-alt"> </span>
-                Catatan Transaksi 
+                Catatan Transaksi
             </a>
 
             <a class="btn btn-default btn-block" href="{{ path_for("user-manage") }}">
                 <span class="glyphicon glyphicon-user"> </span>
-                Kelola Akun 
+                Kelola Akun
             </a>
         {% endif %}
 

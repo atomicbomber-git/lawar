@@ -1,0 +1,151 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Catatan Keuangan Toko {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p.header {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        p.content {
+            font-size: 9pt;
+            margin-bottom: 2px;
+        }
+
+        fieldset {
+            margin-bottom: 20px;
+        }
+
+        .list-group-item {
+            padding: 7px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".date-input").datepicker();
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+            <legend> Catatan Keuangan Toko </legend>
+
+            <div class="well well-sm">
+                <h4>
+                    <strong>
+                        Jumlah uang di kasir sekarang:
+                        <label class="label label-primary"> Rp. {{ cash | number_format(2, ".", ",") }} </label>
+                    </strong>
+                </h4>
+            </div>
+
+            {% if pagination.has_items %}
+                <div class="alert alert-success">
+                    {% if h_start_date != h_end_date %}
+                        Menampilkan catatan keuangan dari <strong> {{ h_start_date }} </strong> sampai dengan <strong> {{ h_end_date }} </strong>
+                    {% else %}
+                        Menampilkan catatan keuangan pada hari <strong> {{ h_start_date }} </strong>
+                    {% endif %}
+                </div>
+                <div class="alert alert-info">
+                    Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
+                    seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    {% if h_start_date != h_end_date %}
+                        Error: Tidak ada catatan keuangan pada diantara <strong> {{ h_start_date }} </strong> dan <strong> {{ h_end_date }} </strong>
+                    {% else %}
+                        Error: Tidak ada catatan keuangan pada pada hari <strong> {{ h_start_date }} </strong>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="list-group">
+                {% for record in cash_history %}
+                    <div class="list-group-item">
+                        <p class="header"> Karyawan: </p>
+                        <p class="content"> {{ record.name }} </p>
+
+                        <p class="header"> Jumlah: </p>
+                        <p class="content">
+                            Rp. {{ record.amount | abs | number_format(2, ",", ".") }}
+                        </p>
+
+                        <p class="header"> Keluar / Masuk: </p>
+                        <p class="content">
+                            {% if record.amount < 0 %}
+                                <label class="label label-danger"> Keluar </label>
+                            {% else %}
+                                <label class="label label-success"> Masuk </label>
+                            {% endif %}
+                        </p>
+
+                        <p class="header"> Deskripsi: </p>
+                        <p class="content">
+                            {% if record.transaction_id %}
+                                <a href="{{ path_for("invoice-transaction-detail", {"id": record.transaction_id}) }}">
+                                    {{ record.description }}
+                                </a>
+                            {% else %}
+                                {{ record.description }}
+                            {% endif %}
+                        </p>
+
+                        <p class="header"> Waktu: </p>
+                        <p class="content"> {{ record.datetime }}, {{ record.h_datetime }} </p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if pagination.has_items %}
+                <nav>
+                <ul class="pager">
+                    {% if pagination.prev_page %}
+                        <li class="previous">
+                            <a href="{{ path_for("ledger-list") }}?page={{ pagination.prev_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="previous disabled">
+                            <a>
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                    {% if pagination.next_page %}
+                        <li class="next">
+                            <a href="{{ path_for("ledger-list") }}?page={{ pagination.next_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="next disabled">
+                            <a>
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+            {% endif %}
+
+        </fieldset>
+
+    </div>
+{% endblock %}
