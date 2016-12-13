@@ -15,10 +15,20 @@
             margin-bottom: 2px;
         }
 
+        fieldset {
+            margin-bottom: 20px;
+        }
+
         .list-group-item {
             padding: 7px;
         }
     </style>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".date-input").datepicker();
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -39,6 +49,21 @@
                     </strong>
                 </h4>
             </div>
+
+            <div class="alert alert-success">
+                Menampilkan catatan keuangan dari <strong> {{ h_start_date }} </strong> sampai dengan <strong> {{ h_end_date }} </strong>
+            </div>
+
+            {% if pagination.has_items %}
+                <div class="alert alert-info">
+                    Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
+                    seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    Error: Tidak ada item pada halaman ini.
+                </div>
+            {% endif %}
 
             <div class="list-group">
                 {% for record in cash_history %}
@@ -76,6 +101,42 @@
                     </div>
                 {% endfor %}
             </div>
+
+            {% if pagination.has_items %}
+                <nav>
+                <ul class="pager">
+                    {% if pagination.prev_page %}
+                        <li class="previous">
+                            <a href="{{ path_for("ledger-list") }}?page={{ pagination.prev_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="previous disabled">
+                            <a>
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                    {% if pagination.next_page %}
+                        <li class="next">
+                            <a href="{{ path_for("ledger-list") }}?page={{ pagination.next_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="next disabled">
+                            <a>
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+            {% endif %}
 
         </fieldset>
 

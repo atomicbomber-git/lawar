@@ -351,17 +351,73 @@ class InventoryController extends BaseController
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
     }
 
-    public function ledger ($request, $response)
+    public function ledgerInput ($request, $response)
     {
+        /* Retrieve messages that were stored in the session */
+        $message = null;
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         /* Load current cash data */
         $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
         $cash_file = file_get_contents($file_path);
         $cash_data = json_decode($cash_file);
         $cash_amount = $cash_data->cash;
 
-        $cash_history = CashHistory::orderBy("datetime", "desc")
-            ->limit(10)
-            ->get();
+        return $this->view->render($response, "inventory/ledger_input.twig",
+            ["cash_history" => $cash_history, "cash" => $cash_amount, "message" => $message]);
+    }
+
+    public function ledgerList ($request, $response)
+    {
+        /* Get page from the query string */
+        $page = $request->getQueryParam("page");
+
+        if ( ! V::intVal()->min(1)->validate($page) ) {
+            /* Invalid page parameter */
+            $page = 1;
+        }
+
+        $items_per_page = 5;
+
+        $count = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")->count();
+        $pagination = $this->getPagination($count, $items_per_page, $page);
+
+        /* Retrieve POST data */
+        $data = $request->getQueryParams();
+        $start_date = $data["start_date"];
+        $end_date = $data["end_date"];
+
+        $has_error = false;
+        /* Validate dates */
+        if ( ! V::date()->Validate($start_date) ) {
+            $has_error = true;
+            $_SESSION["message"]["error"]["start_date"] = "Nilai harus berupa tanggal";
+        }
+
+        if ( ! V::date()->Validate($end_date) ) {
+            $has_error = true;
+            $_SESSION["message"]["error"]["end_date"] = "Nilai harus berupa tanggal";
+        }
+
+        if ( $has_error ) {
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("ledger-input"));
+        }
+
+        /* Load current cash data */
+        $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
+        $cash_file = file_get_contents($file_path);
+        $cash_data = json_decode($cash_file);
+        $cash_amount = $cash_data->cash;
+
+        $start_date = new Date($start_date);
+        $end_date = new Date($end_date);
+
+        /* End date shifted by a day so that when two of the input dates are the same, the results won't be empty */
+        $shifted_end_date = new Date($end_date);
+        $shifted_end_date->add("1 day");
 
         $cash_history = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")
             ->select(
@@ -369,20 +425,32 @@ class InventoryController extends BaseController
                 "cash_history.description", "cash_history.transaction_id",
                 "cash_history.datetime", "clerks.name")
             ->orderBy("cash_history.datetime", "desc")
+            ->whereBetween("cash_history.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->offset( ($page - 1) * $items_per_page)
+            ->limit($items_per_page)
             ->get();
 
+        /* Format dates */
         Date::setLocale('id');
+        $start_date = $start_date->format("l, j F Y");
+        $end_date = $end_date->format("l, j F Y");
 
         /* Formats date to a human readable form */
         foreach ($cash_history as $record) {
             $date = new Date($record->datetime);
-            $record->datetime = $date->format("j F Y - h:i");
+            $record->datetime = $date->format("l, j F Y - h:i");
 
             /* Human readable formats (like '5 days ago', 'Just now', etc.)*/
             $record->h_datetime = $date->diffForHumans();
         }
 
-        return $this->view->render($response, "inventory/ledger.twig",
-            ["cash_history" => $cash_history, "cash" => $cash_amount]);
+        return $this->view->render($response, "inventory/ledger_list.twig",
+            [
+                "cash_history" => $cash_history, "cash" => $cash_amount,
+                "h_start_date" => $start_date, "h_end_date" => $end_date,
+                "start_date" => $data["start_date"], "end_date" => $data["end_date"],
+                "pagination" => $pagination
+            ]
+        );
     }
 }

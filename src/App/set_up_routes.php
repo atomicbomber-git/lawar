@@ -69,7 +69,8 @@ $app->group("/inventory", function() use ($container) {
         $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
         $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
 
-        $this->get("/ledger", "InventoryController:ledger")->setName("ledger");
+        $this->get("/ledger/input", "InventoryController:ledgerInput")->setName("ledger-input");
+        $this->get("/ledger/list", "InventoryController:ledgerList")->setName("ledger-list");
 
     })->add(new ManagerOrAdminOnlyMiddleware($container));
 
