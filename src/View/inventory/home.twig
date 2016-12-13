@@ -25,23 +25,28 @@
             <p> Status Anda adalah: <span class="label label-danger"> {{ user.privilege | upper }} </span> </p>
         </div>
 
-        <a class="btn btn-default btn-block" href="{{ path_for("inventory") }}">
-            <span class="glyphicon glyphicon-list"> </span>
-            Daftar Item
-        </a>
-
         <a class="btn btn-default btn-block" href="{{ path_for("inventory-item-search") }}">
             <span class="glyphicon glyphicon-search"> </span>
             Pencarian Item
         </a>
 
+        <a class="btn btn-default btn-block" href="{{ path_for("inventory") }}">
+            <span class="glyphicon glyphicon-list"> </span>
+            Daftar Item
+        </a>
+
+        <a class="btn btn-default btn-block" href="{{ path_for("cart") }}">
+            <span class="glyphicon glyphicon-shopping-cart"> </span>
+            Keranjang
+        </a>
+
         {#  Manager and admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
+            <a class="btn btn-default btn-block" href="{{ path_for("cash_register") }}">
+                <span class="glyphicon glyphicon-usd"> </span>
+                Tarik / Setor Kas
+            </a>
 
-        {% endif %}
-
-        {#  Admin exclusive features #}
-        {% if user.privilege == "ADMINISTRATOR" %}
             <a class="btn btn-default btn-block" href="{{ path_for("ledger-input") }}">
                 <span class="glyphicon glyphicon-book"> </span>
                 Catatan Keuangan
@@ -51,7 +56,10 @@
                 <span class="glyphicon glyphicon-list-alt"> </span>
                 Catatan Transaksi
             </a>
+        {% endif %}
 
+        {#  Admin exclusive features #}
+        {% if user.privilege == "ADMINISTRATOR" %}
             <a class="btn btn-default btn-block" href="{{ path_for("user-manage") }}">
                 <span class="glyphicon glyphicon-user"> </span>
                 Kelola Akun
