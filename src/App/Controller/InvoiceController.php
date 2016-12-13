@@ -346,6 +346,13 @@ class InvoiceController extends BaseController
 
     public function transactionList ($request, $response, $args)
     {
+        /* Retrieve messages that were stored in the session */
+        $message = null;
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         $transactions = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->select(
                 "clerks.name",
@@ -357,7 +364,7 @@ class InvoiceController extends BaseController
             ->orderBy("t.datetime", "desc")
             ->get();
 
-        return $this->view->render($response, "invoice/transaction_list.twig", ["transactions" => $transactions]);
+        return $this->view->render($response, "invoice/transaction_list.twig", ["transactions" => $transactions, "message" => $message]);
     }
 
     public function transactionDetail ($request, $response, $args)
@@ -433,10 +440,23 @@ class InvoiceController extends BaseController
             $transaction_item->delete();
         }
 
-        $cash_history = CashHistory::find("transaction_id", $args["id"]);
-        $cash_history->delete();
+        $previous_cash_history = CashHistory::where("transaction_id", $args["id"])->first();
+
+        /* Store a cash history record! */
+        $cash_history = new CashHistory([
+            "amount" => $previous_cash_history->amount * -1,
+            "description" => "Retur transaksi",
+            "clerk_id" => $_SESSION["user"]->id,
+            "datetime" => date("Y-m-d H:i:s")
+        ]);
+
+        $cash_history->save();
 
         $transaction = Transaction::find($args["id"]);
         $transaction->delete();
+
+        $_SESSION["message"]["success"]["return"] = "Retur transaksi sukses dilakukan";
+
+        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("invoice-transaction-list"));
     }
 }

@@ -25,13 +25,13 @@
                     <div class="form-check">
 
                         <div class="form-check-label">
-                            <input name="is_out" value="1" type="radio" checked>
-                            Keluar
+                            <input name="is_out" value="0" type="radio" checked>
+                            Masuk
                         </div>
 
                         <div class="form-check-label">
-                            <input name="is_out" value="0" type="radio">
-                            Masuk
+                            <input name="is_out" value="1" type="radio">
+                            Keluar
                         </div>
 
                     </div>
@@ -51,8 +51,15 @@
                 </div>
 
             </form>
+
+            {% if message.success.add_cash_history %}
+                <div class="alert alert-success">
+                    {{ message.success.add_cash_history }}
+                </div>
+            {% endif %}
+
         </fieldset>
 
     </div>
-    
+
 {% endblock %}

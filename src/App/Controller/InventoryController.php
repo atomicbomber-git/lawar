@@ -263,9 +263,16 @@ class InventoryController extends BaseController
 
     public function cashRegister ($request, $response)
     {
+        /* Retrieve messages that were stored in the session */
+        $message = null;
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
         $cash_history = CashHistory::get();
 
-        return $this->view->render($response, "inventory/cash_register.twig", ["cash_history" => $cash_history]);
+        return $this->view->render($response, "inventory/cash_register.twig", ["cash_history" => $cash_history, "message" => $message]);
     }
 
     public function addCashHistory ($request, $response)
@@ -288,6 +295,7 @@ class InventoryController extends BaseController
         ]);
 
         $cash_history->save();
+        $_SESSION["message"]["success"]["add_cash_history"] = "Catatan keuangan berhasil ditambahkan";
 
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
     }
@@ -302,6 +310,14 @@ class InventoryController extends BaseController
 
         $cash_history = CashHistory::orderBy("datetime", "desc")
             ->limit(10)
+            ->get();
+
+        $cash_history = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")
+            ->select(
+                "cash_history.id", "cash_history.amount",
+                "cash_history.description", "cash_history.transaction_id",
+                "cash_history.datetime", "clerks.name")
+            ->orderBy("cash_history.datetime", "desc")
             ->get();
 
         Date::setLocale('id');

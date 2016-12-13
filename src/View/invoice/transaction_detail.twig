@@ -33,6 +33,13 @@
                     <span class="glyphicon glyphicon-arrow-left"></span>
                     Kembali
                 </a>
+
+                {% if not is_return %}
+                    <a class="btn btn-danger btn-xs pull-right" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                        <span class="glyphicon glyphicon-trash"> </span>
+                        Retur
+                    </a>
+                {% endif %}
             </div>
 
             {% if is_return %}
@@ -46,7 +53,7 @@
                         <div class="text-right">
                             <button class="btn btn-danger btn-sm">
                                 Setujui Retur
-                                <span class="glyphicon glyphicon-ok"> </span>
+                                <span class="glyphicon glyphicon-trash"> </span>
                             </button>
                         </div>
                     </form>

@@ -26,6 +26,12 @@
     <div class="container">
         <div class="spacer"></div>
 
+        {% if message.success.return %}
+            <div class="alert alert-success">
+                {{ message.success.return }}
+            </div>
+        {% endif %}
+
         <fieldset>
 
             <legend> Daftar Transaksi </legend>
@@ -46,9 +52,8 @@
                                 Detail
                             </a>
 
-                            <!-- TODO: Change icon! -->
-                            <a class="btn btn-warning btn-xs" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
-                                <span class="glyphicon glyphicon-list-alt"> </span>
+                            <a class="btn btn-danger btn-xs" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                                <span class="glyphicon glyphicon-trash"> </span>
                                 Retur
                             </a>
 

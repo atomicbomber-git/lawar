@@ -43,6 +43,9 @@
             <div class="list-group">
                 {% for record in cash_history %}
                     <div class="list-group-item">
+                        <p class="header"> Karyawan: </p>
+                        <p class="content"> {{ record.name }} </p>
+
                         <p class="header"> Jumlah: </p>
                         <p class="content">
                             Rp. {{ record.amount | abs | number_format(2, ",", ".") }}
@@ -54,14 +57,14 @@
                                 <label class="label label-danger"> Keluar </label>
                             {% else %}
                                 <label class="label label-success"> Masuk </label>
-                            {% endif %} 
+                            {% endif %}
                         </p>
 
                         <p class="header"> Deskripsi: </p>
                         <p class="content">
                             {% if record.transaction_id %}
                                 <a href="{{ path_for("invoice-transaction-detail", {"id": record.transaction_id}) }}">
-                                    {{ record.description }} 
+                                    {{ record.description }}
                                 </a>
                             {% else %}
                                 {{ record.description }}
