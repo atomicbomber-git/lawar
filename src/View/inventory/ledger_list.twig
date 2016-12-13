@@ -58,6 +58,12 @@
                         Menampilkan catatan keuangan pada hari <strong> {{ h_start_date }} </strong>
                     {% endif %}
                 </div>
+
+                <div class="well well-sm">
+                    <h4> Total Pemasukan: <span class="label label-success">  Rp. {{ income | number_format(2, ",", ".") }} </span> </h4>
+                    <h4> Total Pengeluaran: <span class="label label-danger"> Rp. {{ expense | number_format(2, ",", ".") }} </span> </h4>
+                </div>
+
                 <div class="alert alert-info">
                     Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
                     seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
@@ -65,9 +71,9 @@
             {% else %}
                 <div class="alert alert-danger">
                     {% if h_start_date != h_end_date %}
-                        Error: Tidak ada catatan keuangan pada diantara <strong> {{ h_start_date }} </strong> dan <strong> {{ h_end_date }} </strong>
+                        <strong> Error </strong>: Tidak ada catatan keuangan pada diantara <strong> {{ h_start_date }} </strong> dan <strong> {{ h_end_date }} </strong>
                     {% else %}
-                        Error: Tidak ada catatan keuangan pada pada hari <strong> {{ h_start_date }} </strong>
+                        <strong> Error </strong>: Tidak ada catatan keuangan pada pada hari <strong> {{ h_start_date }} </strong>
                     {% endif %}
                 </div>
             {% endif %}

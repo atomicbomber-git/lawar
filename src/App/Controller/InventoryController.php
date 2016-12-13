@@ -390,7 +390,7 @@ class InventoryController extends BaseController
         $end_date = $data["end_date"];
 
         $has_error = false;
-        /* Validate dates */
+        /* Validate input data */
         if ( ! V::date()->Validate($start_date) ) {
             $has_error = true;
             $_SESSION["message"]["error"]["start_date"] = "Nilai harus berupa tanggal";
@@ -416,6 +416,17 @@ class InventoryController extends BaseController
         $count = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")
             ->whereBetween("cash_history.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
             ->count();
+
+        /* Retrieve the total amount of incomes and expenses */
+        $income = CashHistory::whereBetween("datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->where("amount", ">", 0)
+            ->sum("amount");
+
+        $expense = CashHistory::whereBetween("datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+                ->where("amount", "<", 0)
+                ->sum("amount");
+
+        $expense *= -1;
 
         /* Create pagination object */
         $pagination = $this->getPagination($count, $items_per_page, $page);
@@ -456,6 +467,7 @@ class InventoryController extends BaseController
                 "cash_history" => $cash_history, "cash" => $cash_amount,
                 "h_start_date" => $start_date, "h_end_date" => $end_date,
                 "start_date" => $data["start_date"], "end_date" => $data["end_date"],
+                "income" => $income, "expense" => $expense,
                 "pagination" => $pagination
             ]
         );
