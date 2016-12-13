@@ -2,23 +2,93 @@
 
 {% block title %} Inventory | Filtered {% endblock %}
 
+{% block head_extra %}
+    <style>
+
+        .item-unit {
+            display: table;
+            width: 100%;
+        }
+
+        .item-unit div {
+            display: table-cell;
+        }
+
+        .item-unit div:nth-child(1) {
+            width: 70%;
+        }
+
+        .item-unit div:nth-child(3) {
+            text-align: right;
+        }
+
+    </style>
+{% endblock %}
+
 {% block body %}
 {# Navigation Bar #}
     {% include 'general/navbar.twig' %}
 
     <div class="container">
 
-        <div style="height: 60px"></div>
+        <div class="spacer"></div>
+
+        {% if pagination.has_items %}
+            <div class="alert alert-info">
+                Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
+                seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                Error: Tidak ada item pada halaman ini.
+            </div>
+        {% endif %}
 
         <div class="alert alert-success">
-            Menampilkan hasil pencarian <strong> {{ search_params.filter_type }} </strong> untuk kata kunci: <strong> "{{ search_params.keyword }}" </strong>.
+            Hasil pencarian <strong> {{ search_params.filter_type }} </strong> untuk kata kunci: <strong> "{{ search_params.keyword }}" </strong>.
         </div>
 
         <ul class="list-group">
             {% for item in items %}
-                {% include 'inventory/item_unit_buy.twig' %}
+                {% include 'inventory/item_unit_manage.twig' %}
             {% endfor %}
         </ul>
+
+        {% if pagination.has_items %}
+            <nav>
+            <ul class="pager">
+                {% if pagination.prev_page %}
+                    <li class="previous">
+                        <a href="{{ path_for("inventory-filtered") }}?filter_type={{ search_params.filter_type }}&keyword={{ search_params.keyword }}&page={{ pagination.prev_page }}">
+                            &larr; Sebelumnya
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="previous disabled">
+                        <a>
+                            &larr; Sebelumnya
+                        </a>
+                    </li>
+                {% endif %}
+
+
+                {% if pagination.next_page %}
+                    <li class="next">
+                        <a href="{{ path_for("inventory-filtered") }}?filter_type={{ search_params.filter_type }}&keyword={{ search_params.keyword }}&page={{ pagination.next_page }}">
+                            Selanjutnya &rarr;
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="next disabled">
+                        <a>
+                            Selanjutnya &rarr;
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+        {% endif %}
     </div>
-    
+
 {% endblock %}

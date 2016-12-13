@@ -3,21 +3,21 @@
 {% block control_manage %}
 
     {% if user.privilege == "MANAGER" or user.privilege == "ADMINISTRATOR" %}
-        <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}" class="btn btn-success btn-xs align-bottom">
+        <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-edit', {'item_id': item.id}) }}?return_page={{ pagination.current_page }}" class="btn btn-success btn-xs align-bottom">
         <span class="glyphicon glyphicon-pencil"></span>
         </a>
-        <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}" class="btn btn-danger btn-xs align-bottom">
+        <a style="margin: 0px 1px 0px 1px" href="{{ path_for('inventory-item-delete', {'item_id': item.id}) }}?return_page={{ pagination.current_page }}" class="btn btn-danger btn-xs align-bottom">
             <span class="glyphicon glyphicon-trash"></span>
         </a>
     {% endif %}
-  
+
 {% endblock %}
 
 {% block control_add %}
     <div style="text-align: right">
-        <a href="{{ path_for('invoice-item-add', {'item_id': item.id}) }}" class="btn btn-xs {% if (not item.stock_warehouse) and (not item.stock_store)  %} disabled btn-default {% else %} btn-primary {% endif %}">
+        <a href="{{ path_for('invoice-item-add', {'item_id': item.id}) }}?return_page={{ pagination.current_page }}" class="btn btn-xs {% if (not item.stock_warehouse) and (not item.stock_store)  %} disabled btn-default {% else %} btn-primary {% endif %}">
             Beli
             <span class="glyphicon glyphicon-shopping-cart"></span>
         </a>
     </div>
-{% endblock %}  
+{% endblock %}

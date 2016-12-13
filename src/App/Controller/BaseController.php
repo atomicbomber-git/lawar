@@ -37,7 +37,16 @@ class BaseController
             $prev_page = null;
         }
 
+        /* A page has items if offset is equal or greater than the limit, otherwise it's empty */
+        if ($offset < $total_items) {
+            $has_items = true;
+        }
+        else {
+            $has_items = false;
+        }
+
         return [
+            "has_items" => $has_items,
             "total_items" => $total_items,
             "current_page" => $current_page,
             "next_page" => $next_page,

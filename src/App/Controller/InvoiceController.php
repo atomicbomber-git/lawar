@@ -196,6 +196,8 @@ class InvoiceController extends BaseController
 
     public function addTransactionItem ($request, $response, $args)
     {
+        $return_page = $request->getQueryParam("return_page");
+
         /* Retrieve messages that were stored in the session */
         $message = null;
         if ( isset($_SESSION["message"] ) ) {
@@ -204,7 +206,11 @@ class InvoiceController extends BaseController
         }
 
         $item = Item::find($args["item_id"]);
-        return $this->view->render($response, "invoice/transaction_item_add.twig", ["item" => $item, "message" => $message]);
+        return $this->view->render(
+            $response,
+            "invoice/transaction_item_add.twig",
+            ["item" => $item, "message" => $message, "return_page" => $return_page]
+        );
     }
 
     public function processAddTransactionItem ($request, $response, $args)
