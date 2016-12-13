@@ -33,6 +33,12 @@
                         {% if message.error.stock_event %} <span class="help-block"> {{ message.error.stock_event }} </span> {% endif %}
                     </div>
 
+                    {% if message.error.min_stock %}
+                        <div class="alert alert-danger">
+                            {{ message.error.min_stock }}
+                        </div>
+                    {% endif %}
+
                     <div class="form-group" style="text-align: right">
                         <button class="btn btn-primary">
                             Tambahkan

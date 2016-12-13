@@ -26,6 +26,12 @@
     <div class="container">
         <div class="spacer"></div>
 
+        {% if message.success.return %}
+            <div class="alert alert-success">
+                {{ message.success.return }}
+            </div>
+        {% endif %}
+
         <fieldset>
 
             <legend> Daftar Transaksi </legend>
@@ -45,9 +51,15 @@
                                 <span class="glyphicon glyphicon-list-alt"> </span>
                                 Detail
                             </a>
+
+                            <a class="btn btn-danger btn-xs" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                                <span class="glyphicon glyphicon-trash"> </span>
+                                Retur
+                            </a>
+
                         </div>
                         <p> Rp. {{ transaction.price_sum | number_format(2, ".", ".") }} </p>
-                        
+
                     </div>
 
                 {% endfor %}

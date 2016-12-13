@@ -11,6 +11,13 @@ use App\Middleware\AdminOnlyMiddleware;
 
 $container = $app->getContainer();
 
+/* Not found error handler */
+$container["notFoundHandler"] = function($container) {
+    return function($request, $response) use($container) {
+        return $container->view->render($response, "general/404_error.twig");
+    };
+};
+
 /* Redirect "/" to "/login" */
 $app->get("/", function ($request, $response) {
     $path = $this->get("router")->pathFor("login");
