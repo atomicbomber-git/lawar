@@ -86,7 +86,7 @@ $app->group("/user", function() use($container)  {
     $this->post("/editPassword/{id}", "UserController:processEditPassword")->setName("user-process-edit-password");
     $this->get("/delete/{id}", "UserController:delete")->setName("user-delete");
     $this->post("/delete/{id}", "UserController:processDelete")->setName("user-process-delete");
-})->add(new LoggedInMiddleware($container));
+})->add(new LoggedInMiddleware($container))->add(new AdminOnlyMiddleware($container));
 
 $app->group("/invoice", function() use($container) {
     /* --Routes pertaining the shopping cart functionality-- */
@@ -106,6 +106,6 @@ $app->group("/invoice", function() use($container) {
     $this->group("", function() use ($container) {
         $this->get("/transaction_list", "InvoiceController:transactionList")->setName("invoice-transaction-list");
         $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
-    })->add(new AdminOnlyMiddleware($container));
+    })->add(new ManagerOrAdminOnlyMiddleware($container));
 
 })->add(new LoggedInMiddleware($container));

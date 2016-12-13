@@ -11,20 +11,27 @@
         </li>
 
         <li>
-            <a class="menu" href="{{ path_for('inventory') }}">
-                <span class="glyphicon glyphicon-list"></span>
-                Item
+            <a class="menu" href="{{ path_for('inventory-item-search') }}">
+                <span class="glyphicon glyphicon-search"></span>
+                Cari
             </a>
         </li>
 
-        {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-cog"></span>
-                        Kelola
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
+
+
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+                    Kelola
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
+                    <li>
+                        <a class="menu" href="{{ path_for('inventory') }}"> <span class="glyphicon glyphicon-list"></span> Daftar Item </a>
+                    </li>
+
                     <li>
                         <a href="{{ path_for('cart') }}"> <span class="glyphicon glyphicon-shopping-cart"></span> Keranjang </a>
                     </li>
@@ -41,26 +48,30 @@
                         <a href="{{ path_for('type') }}"> <span class="glyphicon glyphicon-cog"></span> Tipe Item </a>
                     </li>
 
+                    <li>
+                        <a href="{{ path_for('ledger-input') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
+                    </li>
+
                     {% if user.privilege == "ADMINISTRATOR" %}
-                        <li>
-                            <a href="{{ path_for('ledger-input') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
-                        </li>
-
                         <li>
                             <a href="{{ path_for("user-manage") }}"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
                         </li>
                     {% endif %}
-                </ul>
-            </li>
-        {% else %}
-            <li>
-                <a href="{{ path_for('cart') }}"> <span class="glyphicon glyphicon-shopping-cart"></span> Keranjang </a>
-            </li>
-        {% endif %}
+                {% else %}
+                    <li>
+                        <a class="menu" href="{{ path_for('inventory') }}"> <span class="glyphicon glyphicon-list"></span> Daftar Item </a>
+                    </li>
+                    <li>
+                        <a href="{{ path_for('cart') }}"> <span class="glyphicon glyphicon-shopping-cart"></span> Keranjang </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+
 
         <li>
             <a class="menu" href="{{ path_for('logout') }}">
