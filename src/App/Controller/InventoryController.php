@@ -366,8 +366,10 @@ class InventoryController extends BaseController
         $cash_data = json_decode($cash_file);
         $cash_amount = $cash_data->cash;
 
+        $current_date = date("m/d/Y");
+
         return $this->view->render($response, "inventory/ledger_input.twig",
-            ["cash_history" => $cash_history, "cash" => $cash_amount, "message" => $message]);
+            ["cash_history" => $cash_history, "cash" => $cash_amount, "message" => $message, "current_date" => $current_date]);
     }
 
     public function ledgerList ($request, $response)
@@ -381,9 +383,6 @@ class InventoryController extends BaseController
         }
 
         $items_per_page = 5;
-
-        $count = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")->count();
-        $pagination = $this->getPagination($count, $items_per_page, $page);
 
         /* Retrieve POST data */
         $data = $request->getQueryParams();
@@ -406,18 +405,26 @@ class InventoryController extends BaseController
             return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("ledger-input"));
         }
 
-        /* Load current cash data */
-        $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
-        $cash_file = file_get_contents($file_path);
-        $cash_data = json_decode($cash_file);
-        $cash_amount = $cash_data->cash;
-
         $start_date = new Date($start_date);
         $end_date = new Date($end_date);
 
         /* End date shifted by a day so that when two of the input dates are the same, the results won't be empty */
         $shifted_end_date = new Date($end_date);
         $shifted_end_date->add("1 day");
+
+        /* Retrieve the total amount of items to show */
+        $count = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")
+            ->whereBetween("cash_history.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->count();
+
+        /* Create pagination object */
+        $pagination = $this->getPagination($count, $items_per_page, $page);
+
+        /* Load current cash data */
+        $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
+        $cash_file = file_get_contents($file_path);
+        $cash_data = json_decode($cash_file);
+        $cash_amount = $cash_data->cash;
 
         $cash_history = CashHistory::leftJoin("clerks", "cash_history.clerk_id", "=", "clerks.id")
             ->select(

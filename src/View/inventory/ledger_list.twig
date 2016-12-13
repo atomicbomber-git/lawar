@@ -50,18 +50,25 @@
                 </h4>
             </div>
 
-            <div class="alert alert-success">
-                Menampilkan catatan keuangan dari <strong> {{ h_start_date }} </strong> sampai dengan <strong> {{ h_end_date }} </strong>
-            </div>
-
             {% if pagination.has_items %}
+                <div class="alert alert-success">
+                    {% if h_start_date != h_end_date %}
+                        Menampilkan catatan keuangan dari <strong> {{ h_start_date }} </strong> sampai dengan <strong> {{ h_end_date }} </strong>
+                    {% else %}
+                        Menampilkan catatan keuangan pada hari <strong> {{ h_start_date }} </strong>
+                    {% endif %}
+                </div>
                 <div class="alert alert-info">
                     Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
                     seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
                 </div>
             {% else %}
                 <div class="alert alert-danger">
-                    Error: Tidak ada item pada halaman ini.
+                    {% if h_start_date != h_end_date %}
+                        Error: Tidak ada catatan keuangan pada diantara <strong> {{ h_start_date }} </strong> dan <strong> {{ h_end_date }} </strong>
+                    {% else %}
+                        Error: Tidak ada catatan keuangan pada pada hari <strong> {{ h_start_date }} </strong>
+                    {% endif %}
                 </div>
             {% endif %}
 
