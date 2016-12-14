@@ -22,13 +22,7 @@ class InventoryController extends BaseController
 
     public function all ($request, $response)
     {
-        /* Get page from the query string */
-        $page = $request->getQueryParam("page");
-
-        if ( ! V::intVal()->min(1)->validate($page) ) {
-            /* Invalid page parameter */
-            $page = 1;
-        }
+        $page = $this->getCurrentPage($request);
 
         $items_per_page = 5;
 

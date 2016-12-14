@@ -29,13 +29,21 @@
             </legend>
 
             <div class="well well-sm">
-                <a href="{{ path_for('invoice-transaction-list') }}" class="btn btn-warning btn-xs">
-                    <span class="glyphicon glyphicon-arrow-left"></span>
-                    Kembali
-                </a>
+                {% if not is_return %}
+                    <a href="{{ path_for('invoice-transaction-list') }}?page={{ return_page }}" class="btn btn-warning btn-xs">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        Kembali
+                    </a>
+                {% else %}
+                    <a href="{{ path_for('invoice-transaction-detail', {"id": transaction.id}) }}?return_page={{ return_page }}" class="btn btn-warning btn-xs">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        Kembali
+                    </a>
+                {% endif %}
+
 
                 {% if not is_return %}
-                    <a class="btn btn-danger btn-xs pull-right" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                    <a class="btn btn-danger btn-xs pull-right" href="{{ path_for("cart-return", {"id": transaction.id}) }}?return_page={{ return_page }}">
                         <span class="glyphicon glyphicon-trash"> </span>
                         Retur
                     </a>
