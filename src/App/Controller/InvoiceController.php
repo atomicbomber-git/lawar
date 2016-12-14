@@ -360,7 +360,7 @@ class InvoiceController extends BaseController
         }
 
         $page = $this->getCurrentPage($request);
-        $items_per_page = 2;
+        $items_per_page = 5;
 
         $transactions = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->select(
