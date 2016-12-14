@@ -14,9 +14,10 @@
             <legend> Tambahkan / Kurangi Uang dari Kasir </legend>
 
             <form action="{{ path_for('cash_register-add_history') }}" method="POST">
-                <div class="form-group">
+                <div class="form-group {% if message.error.amount %} has-error {% endif %}>">
                     <label class="control-label"> Jumlah Uang: </label>
                     <input name="amount" class="form-control" type="number" placeholder="Jumlah uang">
+                    {% if message.error.amount %} <span class="help-block"> {{ message.error.amount }} </span> {% endif %}
                 </div>
 
                 <div class="form-group">
@@ -37,9 +38,10 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group {% if message.error.description %} has-error {% endif %}">
                     <label class="control-label"> Penjelasan: </label>
                     <textarea name="description" class="form-control" placeholder="Alasan pemasukan / pengeluaran uang"></textarea>
+                    {% if message.error.description %} <span class="help-block"> {{ message.error.description }} </span> {% endif %}
                 </div>
 
                 <div class="form-group" style="text-align: right">
