@@ -408,7 +408,7 @@ class InvoiceController extends BaseController
         /* Format transaction date */
         Date::setLocale('id');
         $date = new Date($transaction->datetime);
-        $transaction->datetime = $date->format("j F Y - h:i");
+        $transaction->datetime = $date->format("l, j F Y - h:i");
         $transaction->h_datetime = $date->diffForHumans();
 
         $transaction_items = TransactionItem::where("transaction_id", $args["id"])->get();
@@ -435,7 +435,7 @@ class InvoiceController extends BaseController
         /* Format transaction date */
         Date::setLocale('id');
         $date = new Date($transaction->datetime);
-        $transaction->datetime = $date->format("j F Y - h:i");
+        $transaction->datetime = $date->format("l, j F Y - h:i");
         $transaction->h_datetime = $date->diffForHumans();
 
         $transaction_items = TransactionItem::where("transaction_id", $args["id"])->get();
