@@ -323,14 +323,35 @@ class InventoryController extends BaseController
 
         $cash_history = CashHistory::get();
 
-        return $this->view->render($response, "inventory/cash_register.twig", ["cash_history" => $cash_history, "message" => $message]);
+        return $this->view->render($response,
+            "inventory/cash_register.twig",
+            ["cash_history" => $cash_history, "message" => $message]);
     }
 
     public function addCashHistory ($request, $response)
     {
         $data = $request->getParsedBody();
 
-        /* TODO: Validation */
+        /*---Validations---*/
+
+        $has_error = false;
+
+        /* 'amount' must be larger than 0 */
+        if ( ! V::intVal()->min(1)->validate($data["amount"])) {
+            $_SESSION["message"]["error"]["amount"] = "Nilai harus berupa bilangan bulat positif";
+            $has_error = true;
+        }
+
+        /* 'description' must be filled */
+        if ( ! V::notEmpty()->validate($data["description"]) ) {
+            $_SESSION["message"]["error"]["description"] = "Deskripsi tidak boleh kosong";
+            $has_error = true;
+        }
+
+        if ($has_error) {
+            return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cash_register"));
+        }
+
 
         $amount = $data["amount"];
         /* Amount out is negative if we're taking money from the register */
