@@ -36,6 +36,17 @@
 
             <legend> Daftar Transaksi </legend>
 
+            {% if pagination.has_items %}
+                <div class="alert alert-info">
+                    Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
+                    seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    Error: Tidak ada item pada halaman ini.
+                </div>
+            {% endif %}
+
             <div class="list-group">
                 {% for transaction in transactions %}
                     <div class="list-group-item">
@@ -47,12 +58,13 @@
                         <p> {{ transaction.name }} </p>
                         <p class="header"> Total Harga: </p>
                         <div class="pull-right">
-                            <a class="btn btn-info btn-xs" href="{{ path_for("invoice-transaction-detail", {"id": transaction.id}) }}">
+                            <a class="btn btn-info btn-xs" href="{{ path_for("invoice-transaction-detail", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}">
                                 <span class="glyphicon glyphicon-list-alt"> </span>
                                 Detail
                             </a>
 
-                            <a class="btn btn-danger btn-xs" href="{{ path_for("cart-return", {"id": transaction.id}) }}">
+                            <a class="btn btn-danger btn-xs"
+                                href="{{ path_for("cart-return", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}">
                                 <span class="glyphicon glyphicon-trash"> </span>
                                 Retur
                             </a>
@@ -64,6 +76,42 @@
 
                 {% endfor %}
             </div>
+
+            {% if pagination.has_items %}
+                <nav>
+                <ul class="pager">
+                    {% if pagination.prev_page %}
+                        <li class="previous">
+                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.prev_page }}">
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="previous disabled">
+                            <a>
+                                &larr; Sebelumnya
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                    {% if pagination.next_page %}
+                        <li class="next">
+                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.next_page }}">
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="next disabled">
+                            <a>
+                                Selanjutnya &rarr;
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+            {% endif %}
 
         </fieldset>
 

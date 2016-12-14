@@ -1,5 +1,6 @@
 <?php
 namespace App\Controller;
+use Respect\Validation\Validator as V;
 
 class BaseController
 {
@@ -15,6 +16,19 @@ class BaseController
             default:
                 return $this->container->$value;
         }
+    }
+
+    public function getCurrentPage($request)
+    {
+        /* Get page from the query string */
+        $page = $request->getQueryParam("page");
+
+        if ( ! V::intVal()->min(1)->validate($page) ) {
+            /* Invalid page parameter */
+            $page = 1;
+        }
+
+        return $page;
     }
 
     public function getPagination ($total_items, $items_per_page, $current_page)

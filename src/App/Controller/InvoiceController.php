@@ -359,6 +359,9 @@ class InvoiceController extends BaseController
             unset( $_SESSION["message"] );
         }
 
+        $page = $this->getCurrentPage($request);
+        $items_per_page = 2;
+
         $transactions = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->select(
                 "clerks.name",
@@ -368,9 +371,21 @@ class InvoiceController extends BaseController
             )
             ->where("is_finished", 1)
             ->orderBy("t.datetime", "desc")
+            ->offset(($page - 1) * $items_per_page)
+            ->limit($items_per_page)
             ->get();
 
-        return $this->view->render($response, "invoice/transaction_list.twig", ["transactions" => $transactions, "message" => $message]);
+        $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
+            ->where("is_finished", 1)
+            ->count();
+
+        $pagination = $this->getPagination($count, $items_per_page, $page);
+
+        return $this->view->render($response, "invoice/transaction_list.twig",
+            [
+                "transactions" => $transactions, "message" => $message,
+                "pagination" => $pagination
+            ]);
     }
 
     public function transactionDetail ($request, $response, $args)
@@ -392,12 +407,15 @@ class InvoiceController extends BaseController
         $sum = TransactionItem::where("transaction_id", $args["id"])
             ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
 
+        /* Page of transaction list to return to */
+        $return_page = $request->getQueryParam("return_page");
+
         return $this->view->render($response, "invoice/transaction_detail.twig",
-            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum]
+            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum,
+            "return_page" => $return_page]
         );
     }
 
-    /* TODO: Implement cart return warning display feature */
     public function cartReturn($request, $response, $args) {
         $transaction = Transaction::leftJoin("clerks", "transactions.clerk_id", "=", "clerks.id")
             ->select("transactions.id", "datetime", "clerks.name")
@@ -416,12 +434,15 @@ class InvoiceController extends BaseController
         $sum = TransactionItem::where("transaction_id", $args["id"])
             ->sum(Capsule::raw("price * (stock_warehouse + stock_store + stock_event)"));
 
+        /* Transaction list page to return to */
+        $return_page = $request->getQueryParam("return_page");
+
         return $this->view->render($response, "invoice/transaction_detail.twig",
-            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum, "is_return" => true]
+            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum, "is_return" => true,
+            "return_page" => $return_page]
         );
     }
 
-    /* TODO: Implement cart return functionality */
     public function processCartReturn($request, $response, $args) {
 
         /* Retrieve transaction items and delete them */
