@@ -375,6 +375,16 @@ class InvoiceController extends BaseController
             ->limit($items_per_page)
             ->get();
 
+        /* Formats date to a human readable form */
+        Date::setLocale('id');
+        foreach ($transactions as $transaction) {
+            $date = new Date($transaction->datetime);
+            $transaction->datetime = $date->format("l, j F Y - h:i");
+
+            /* Human readable formats (like '5 days ago', 'Just now', etc.)*/
+            $transaction->h_datetime = $date->diffForHumans();
+        }
+
         $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->where("is_finished", 1)
             ->count();
