@@ -141,7 +141,8 @@ class InventoryController extends BaseController
             unset( $_SESSION["message"] );
         }
 
-        $current_date = date("d/m/Y");
+        $current_date = new Date();
+        $current_date = $current_date->format("m/d/Y");
 
         $types = Type::get();
         return $this->view->render($response, "inventory/item_add.twig",
