@@ -385,7 +385,7 @@ class InventoryController extends BaseController
         $current_date = date("m/d/Y");
 
         return $this->view->render($response, "inventory/ledger_input.twig",
-            ["cash_history" => $cash_history, "cash" => $cash_amount, "message" => $message, "current_date" => $current_date]);
+            ["cash" => $cash_amount, "message" => $message, "current_date" => $current_date]);
     }
 
     public function ledgerList ($request, $response)
