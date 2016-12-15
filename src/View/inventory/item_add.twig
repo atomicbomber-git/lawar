@@ -49,7 +49,7 @@
 
             <div class="form-group {% if message.form_error.entry_date %} has-error {% endif %}">
                 <label class="control-label"> Tanggal Masuk Item: </label>
-                <input class="form-control" id="entry_date_input" name="entry_date" placeholder="Tanggal masuk" value="{{ current_date }}">
+                <input class="form-control" id="entry_date_input" name="entry_date" placeholder="Tanggal masuk" value="{{ current_date | raw }}">
                 {% if message.form_error.entry_date %} <span class="help-block"> {{ message.form_error.entry_date }} </span> {% endif %}
             </div>
 
