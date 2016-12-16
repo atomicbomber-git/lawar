@@ -17,9 +17,6 @@
             </a>
         </li>
 
-
-
-
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <span class="glyphicon glyphicon-cog"></span>
@@ -52,10 +49,6 @@
                         <a href="{{ path_for('ledger-input') }}"> <span class="glyphicon glyphicon-book"></span> Catatan Keuangan </a>
                     </li>
 
-                    <li>
-                        <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
-                    </li>
-
                     {% if user.privilege == "ADMINISTRATOR" %}
                         <li>
                             <a href="{{ path_for("user-manage") }}"> <span class="glyphicon glyphicon-user"></span> Kelola Akun </a>
@@ -67,6 +60,9 @@
                     </li>
                     <li>
                         <a href="{{ path_for('cart') }}"> <span class="glyphicon glyphicon-shopping-cart"></span> Keranjang </a>
+                    </li>
+                    <li>
+                        <a href="{{ path_for("invoice-transaction-list") }}"> <span class="glyphicon glyphicon-list-alt"></span> Catatan Transaksi </a>
                     </li>
                 {% endif %}
             </ul>
