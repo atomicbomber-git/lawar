@@ -116,7 +116,7 @@
                     {% endif %}
 
                     <p class="header"> Qty. Total * Harga: </p>
-                    <p> 
+                    <p>
                         <span class="label label-default">
                             {{ transaction_item.stock_store + transaction_item.stock_warehouse + transaction_item.stock_event }} Item
                             *
@@ -125,12 +125,12 @@
                         </span>
 
                         <span class="label label-info">
-                            Rp. {{ sum | number_format(2, '.', ',') }}
+                            Rp. {{ ((transaction_item.stock_store + transaction_item.stock_warehouse + transaction_item.stock_event) * transaction_item.price)  | number_format(2, '.', ',') }}
                         </span>
                     </p>
 
                     <p>
-                        
+
                     </p>
                 </li>
             {% endfor %}
@@ -174,7 +174,7 @@
 
         </fieldset>
 
-        
+
     </div>
 
 {% endblock %}
