@@ -362,7 +362,7 @@ class InvoiceController extends BaseController
         $current_date = date("m/d/Y");
 
         return $this->view->render($response, "invoice/transaction_input.twig",
-            ["cash" => $cash_amount, "message" => $message, "current_date" => $current_date]);
+            ["message" => $message, "current_date" => $current_date]);
     }
 
     public function transactionList ($request, $response, $args)
