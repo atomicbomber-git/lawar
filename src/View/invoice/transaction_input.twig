@@ -1,0 +1,75 @@
+{% extends 'general/base.twig' %}
+
+{% block title %} Catatan Transaksi Toko {% endblock %}
+
+{% block head_extra %}
+    <style>
+        p.header {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        p.content {
+            font-size: 9pt;
+            margin-bottom: 2px;
+        }
+
+        fieldset {
+            margin-bottom: 20px;
+        }
+
+        .list-group-item {
+            padding: 7px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".date-input").datepicker();
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    {# Navigation Bar #}
+    {% include 'general/navbar.twig' %}
+
+    <div class="container">
+        <div class="spacer"></div>
+
+        <fieldset>
+            <legend> Catatan Transaksi Toko </legend>
+
+            <fieldset>
+                <legend> Rentang Waktu Catatan Transaksi </legend>
+
+                <div class="alert alert-info">
+                    <strong> Info: </strong> jika tanggal mulai dan tanggal akhir sama, maka catatan transaksi akan menampilkan
+                    catatan pada tanggal tersebut saja.
+                </div>
+
+                <form action="{{ path_for("invoice-transaction-list") }}" method="GET">
+                    <div class="form-group {% if message.error.start_date %} has-error {% endif %}">
+                        <label class="control-label"> Tanggal Awal: </label>
+                        <input name="start_date" class="date-input form-control" placeholder="Tanggal awal" value="{{ current_date }}">
+                        {% if message.error.start_date %} <span class="help-block"> {{ message.error.start_date }} </span> {% endif %}
+                    </div>
+                    <div class="form-group {% if message.error.end_date %} has-error {% endif %}">
+                        <label class="control-label"> Tanggal Akhir: </label>
+                        <input name="end_date" class="date-input form-control" placeholder="Tanggal akhir" value="{{ current_date }}">
+                        {% if message.error.end_date %} <span class="help-block"> {{ message.error.end_date }} </span> {% endif %}
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-sm">
+                            Tampilkan Catatan Transaksi
+                            <span class="glyphicon glyphicon-book"> </span>
+                        </button>
+                    </div>
+                </form>
+            </fieldset>
+
+        </fieldset>
+
+    </div>
+{% endblock %}
