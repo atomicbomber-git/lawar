@@ -103,6 +103,7 @@ $app->group("/invoice", function() use($container) {
     $this->get("/transaction_item/edit/{item_id}", "InvoiceController:editTransactionItem")->setName("invoice-item-edit");
     $this->post("/transaction_item/edit/{item_id}", "InvoiceController:processEditTransactionItem")->setName("invoice-item-process-edit");
 
+    $this->get("/transaction_input", "InvoiceController:transactionInput")->setName("invoice-transaction-input");
     $this->get("/transaction_list", "InvoiceController:transactionList")->setName("invoice-transaction-list");
     $this->get("/transaction_detail/{id}", "InvoiceController:transactionDetail")->setName("invoice-transaction-detail");
 })->add(new LoggedInMiddleware($container));

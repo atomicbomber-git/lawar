@@ -350,6 +350,21 @@ class InvoiceController extends BaseController
         return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("cart"));
     }
 
+    public function transactionInput($request, $response)
+    {
+        /* Retrieve messages that were stored in the session */
+        $message = null;
+        if ( isset($_SESSION["message"] ) ) {
+            $message = $_SESSION["message"];
+            unset( $_SESSION["message"] );
+        }
+
+        $current_date = date("m/d/Y");
+
+        return $this->view->render($response, "invoice/transaction_input.twig",
+            ["cash" => $cash_amount, "message" => $message, "current_date" => $current_date]);
+    }
+
     public function transactionList ($request, $response, $args)
     {
         /* Retrieve messages that were stored in the session */
@@ -358,6 +373,11 @@ class InvoiceController extends BaseController
             $message = $_SESSION["message"];
             unset( $_SESSION["message"] );
         }
+
+        $data = $request->getQueryParams();
+        $start_date = new Date($data["start_date"]);
+        $shifted_end_date = new Date($data["end_date"]);
+        $shifted_end_date->add("1 day");
 
         $page = $this->getCurrentPage($request);
         $items_per_page = 5;
@@ -370,10 +390,17 @@ class InvoiceController extends BaseController
                 Capsule::raw("(SELECT SUM(ti.price * (ti.stock_store + ti.stock_warehouse + ti.stock_event)) FROM transaction_items AS ti WHERE ti.transaction_id = t.id) AS price_sum")
             )
             ->where("is_finished", 1)
+            ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
             ->orderBy("t.datetime", "desc")
             ->offset(($page - 1) * $items_per_page)
-            ->limit($items_per_page)
-            ->get();
+            ->limit($items_per_page);
+
+        /* A shopkeeper can only see his or her own transaction records */
+        if ($_SESSION["user"]->privilege === "SHOPKEEPER") {
+            $transactions = $transactions->where("clerk_id", $_SESSION["user"]->id);
+        }
+
+        $transactions = $transactions->get();
 
         /* Formats date to a human readable form */
         Date::setLocale('id');
@@ -387,6 +414,7 @@ class InvoiceController extends BaseController
 
         $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->where("is_finished", 1)
+            // ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
             ->count();
 
         $pagination = $this->getPagination($count, $items_per_page, $page);
