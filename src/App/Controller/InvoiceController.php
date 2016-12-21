@@ -414,7 +414,7 @@ class InvoiceController extends BaseController
 
         $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->where("is_finished", 1)
-            // ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
             ->count();
 
         $pagination = $this->getPagination($count, $items_per_page, $page);
