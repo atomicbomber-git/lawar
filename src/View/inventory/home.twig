@@ -45,6 +45,11 @@
             Catatan Transaksi
         </a>
 
+        <a class="btn btn-default btn-block" href="{{ path_for("ledger-input") }}">
+            <span class="glyphicon glyphicon-book"> </span>
+            Catatan Keuangan
+        </a>
+
         {#  Manager and admin exclusive features #}
         {% if user.privilege == "ADMINISTRATOR" or user.privilege == "MANAGER" %}
             <a class="btn btn-default btn-block" href="{{ path_for("cash_register") }}">
@@ -60,11 +65,6 @@
             <a class="btn btn-default btn-block" href="{{ path_for("type") }}">
                 <span class="glyphicon glyphicon-cog"> </span>
                 Tipe Item
-            </a>
-
-            <a class="btn btn-default btn-block" href="{{ path_for("ledger-input") }}">
-                <span class="glyphicon glyphicon-book"> </span>
-                Catatan Keuangan
             </a>
         {% endif %}
 
