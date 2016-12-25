@@ -51,6 +51,15 @@
     <div class="container">
         <div style="height: 80px"></div>
 
+        <div class="well well-sm">
+            <h4>
+                <strong>
+                    Jumlah uang di kasir sekarang:
+                    <label class="label label-primary"> Rp. {{ cash | number_format(2, ".", ",") }} </label>
+                </strong>
+            </h4>
+        </div>
+
         <fieldset>
             <legend> Keranjang Belanjaan </legend>
             <ul class="list-group">
