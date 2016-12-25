@@ -43,8 +43,9 @@ $app->group("/inventory", function() use ($container) {
     $this->get("/filtered", "InventoryController:filtered")->setName("inventory-filtered");
     $this->get("/search", "InventoryController:searchItem")->setName("inventory-item-search");
 
-    /* Debug route, TODO: delete this when you're ready to deploy */
-    $this->get("/debug", "InventoryController:debug");
+    /* Routes for displaying ledgers */
+    $this->get("/ledger/input", "InventoryController:ledgerInput")->setName("ledger-input");
+    $this->get("/ledger/list", "InventoryController:ledgerList")->setName("ledger-list");
 
     /* URLs accessible only by user with ADMIN or MANAGER privilege */
     $this->group("", function() use ($container) {
@@ -68,9 +69,6 @@ $app->group("/inventory", function() use ($container) {
         $this->post("/type/edit/{type_id}", "InventoryController:processEditType")->setName("inventory-type-process-edit");
         $this->get("/type/delete/{type_id}", "InventoryController:deleteType")->setName("inventory-type-delete");
         $this->post("/type/delete/{type_id}", "InventoryController:processDeleteType")->setName("inventory-type-process-delete");
-
-        $this->get("/ledger/input", "InventoryController:ledgerInput")->setName("ledger-input");
-        $this->get("/ledger/list", "InventoryController:ledgerList")->setName("ledger-list");
 
     })->add(new ManagerOrAdminOnlyMiddleware($container));
 
