@@ -72,10 +72,20 @@ class InvoiceController extends BaseController
         if ( $count_error ) { $is_error = true; }
         if ( $quantity_error ) { $is_error = true; }
 
+        /* Load current cash data */
+        $file_path = "$GLOBALS[WEB_ROOT]/storage/cash.json";
+        $cash_file = file_get_contents($file_path);
+        $cash_data = json_decode($cash_file);
+        $cash_amount = $cash_data->cash;
+
         return $this->view->render(
             $response,
             "invoice/cart.twig",
-            ["cart" => $cart, "sum" => $sum, "message" => $message, "persisted" => $persisted, "is_error" => $is_error]
+            [
+                "cart" => $cart, "sum" => $sum, "message" => $message,
+                "persisted" => $persisted, "is_error" => $is_error,
+                "cash" => $cash_amount
+            ]
         );
     }
 
@@ -414,7 +424,7 @@ class InvoiceController extends BaseController
 
         $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->where("is_finished", 1)
-            // ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
             ->count();
 
         $pagination = $this->getPagination($count, $items_per_page, $page);
