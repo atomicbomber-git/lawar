@@ -30,29 +30,23 @@
 
             <div class="well well-sm">
                 {% if not is_return %}
-                    <a href="{{ path_for('invoice-transaction-list') }}?page={{ return_page }}" class="btn btn-warning btn-xs">
+                    <a href="{{ path_for('invoice-transaction-list') }}?page={{ return_page }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-warning btn-xs">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                         Kembali
                     </a>
                 {% else %}
-                    <a href="{{ path_for('invoice-transaction-detail', {"id": transaction.id}) }}?return_page={{ return_page }}" class="btn btn-warning btn-xs">
+                    <a href="{{ path_for('invoice-transaction-list', {"id": transaction.id}) }}?page={{ return_page }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-warning btn-xs">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                         Kembali
                     </a>
                 {% endif %}
 
 
-                {% if not is_return %}
-                    <a class="btn btn-danger btn-xs pull-right" href="{{ path_for("cart-return", {"id": transaction.id}) }}?return_page={{ return_page }}">
-                        <span class="glyphicon glyphicon-trash"> </span>
-                        Retur
-                    </a>
-                {% endif %}
             </div>
 
             {% if is_return %}
                 <div class="well well-sm">
-                    <form action="{{ path_for("cart-process-return", {"id": transaction.id}) }}" method="POST">
+                    <form action="{{ path_for("cart-process-return", {"id": transaction.id}) }}?start_date={{ start_date }}&end_date={{ end_date }}" method="POST">
                         <div class="alert alert-danger">
                             Anda yakin hendak melakukan retur (pengembalian) terhadap pesanan ini?
                             Catatan transaksi akan dihapus, jumlah stock akan dikembalikan sesuai dengan jumlah item pembelian
