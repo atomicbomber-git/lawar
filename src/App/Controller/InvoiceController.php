@@ -432,7 +432,8 @@ class InvoiceController extends BaseController
         return $this->view->render($response, "invoice/transaction_list.twig",
             [
                 "transactions" => $transactions, "message" => $message,
-                "pagination" => $pagination
+                "pagination" => $pagination, "start_date" => $data["start_date"],
+                "end_date" => $data["end_date"]
             ]);
     }
 
@@ -457,10 +458,15 @@ class InvoiceController extends BaseController
 
         /* Page of transaction list to return to */
         $return_page = $request->getQueryParam("return_page");
+        $start_date = $request->getQueryParam("start_date");
+        $end_date = $request->getQueryParam("end_date");
 
         return $this->view->render($response, "invoice/transaction_detail.twig",
             ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum,
-            "return_page" => $return_page]
+            "return_page" => $return_page,
+            "start_date" => $start_date,
+            "end_date" => $end_date
+            ]
         );
     }
 
@@ -484,10 +490,17 @@ class InvoiceController extends BaseController
 
         /* Transaction list page to return to */
         $return_page = $request->getQueryParam("return_page");
+        $start_date = $request->getQueryParam("start_date");
+        $end_date = $request->getQueryParam("end_date");
 
         return $this->view->render($response, "invoice/transaction_detail.twig",
-            ["transaction" => $transaction, "transaction_items" => $transaction_items, "sum" => $sum, "is_return" => true,
-            "return_page" => $return_page]
+            ["transaction" => $transaction, "transaction_items" => $transaction_items,
+                "sum" => $sum,
+                "is_return" => true,
+                "return_page" => $return_page,
+                "start_date" => $start_date,
+                "end_date" => $end_date
+            ]
         );
     }
 
@@ -532,6 +545,13 @@ class InvoiceController extends BaseController
 
         $_SESSION["message"]["success"]["return"] = "Retur transaksi sukses dilakukan";
 
-        return $response->withStatus(302)->withHeader("Location", $this->router->pathFor("invoice-transaction-list"));
+        $start_date = $request->getQueryParam("start_date");
+        $end_date = $request->getQueryParam("end_date");
+        $path = $this->router->pathFor("invoice-transaction-list");
+
+        return $response->withStatus(302)->withHeader(
+            "Location",
+            "$path?start_date=$start_date&end_date=$end_date"
+        );
     }
 }

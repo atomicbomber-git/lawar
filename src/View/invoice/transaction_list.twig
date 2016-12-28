@@ -58,13 +58,13 @@
                         <p> {{ transaction.name }} </p>
                         <p class="header"> Total Harga: </p>
                         <div class="pull-right">
-                            <a class="btn btn-info btn-xs" href="{{ path_for("invoice-transaction-detail", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}">
+                            <a class="btn btn-info btn-xs" href="{{ path_for("invoice-transaction-detail", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
                                 <span class="glyphicon glyphicon-list-alt"> </span>
                                 Detail
                             </a>
 
                             <a class="btn btn-danger btn-xs"
-                                href="{{ path_for("cart-return", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}">
+                                href="{{ path_for("cart-return", {"id": transaction.id}) }}?return_page={{ pagination.current_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
                                 <span class="glyphicon glyphicon-trash"> </span>
                                 Retur
                             </a>
@@ -82,7 +82,7 @@
                 <ul class="pager">
                     {% if pagination.prev_page %}
                         <li class="previous">
-                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.prev_page }}">
+                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.prev_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
                                 &larr; Sebelumnya
                             </a>
                         </li>
@@ -97,7 +97,7 @@
 
                     {% if pagination.next_page %}
                         <li class="next">
-                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.next_page }}">
+                            <a href="{{ path_for("invoice-transaction-list") }}?page={{ pagination.next_page }}&start_date={{ start_date }}&end_date={{ end_date }}">
                                 Selanjutnya &rarr;
                             </a>
                         </li>
