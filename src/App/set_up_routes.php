@@ -43,16 +43,16 @@ $app->group("/inventory", function() use ($container) {
     $this->get("/filtered", "InventoryController:filtered")->setName("inventory-filtered");
     $this->get("/search", "InventoryController:searchItem")->setName("inventory-item-search");
 
-    /* Routes for displaying ledgers */
-    $this->get("/ledger/input", "InventoryController:ledgerInput")->setName("ledger-input");
-    $this->get("/ledger/list", "InventoryController:ledgerList")->setName("ledger-list");
-
     /* URLs accessible only by user with ADMIN or MANAGER privilege */
     $this->group("", function() use ($container) {
 
         /* Cash register related */
         $this->get("/cash_register", "InventoryController:cashRegister")->setName("cash_register");
         $this->post("/cash_register/add_history", "InventoryController:addCashHistory")->setName("cash_register-add_history");
+
+        /* Routes for displaying ledgers */
+        $this->get("/ledger/input", "InventoryController:ledgerInput")->setName("ledger-input");
+        $this->get("/ledger/list", "InventoryController:ledgerList")->setName("ledger-list");
 
         /* Routes pertaining the item management functionality */
         $this->get("/item/add", "InventoryController:addItem")->setName("inventory-item-add");

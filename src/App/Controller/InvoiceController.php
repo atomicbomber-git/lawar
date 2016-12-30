@@ -386,6 +386,8 @@ class InvoiceController extends BaseController
 
         $data = $request->getQueryParams();
         $start_date = new Date($data["start_date"]);
+        $end_date = new Date($data["end_date"]);
+
         $shifted_end_date = new Date($data["end_date"]);
         $shifted_end_date->add("1 day");
 
@@ -422,18 +424,38 @@ class InvoiceController extends BaseController
             $transaction->h_datetime = $date->diffForHumans();
         }
 
-        $count = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
+        $countQuery = Capsule::table(Capsule::raw("transactions AS t LEFT JOIN clerks ON t.clerk_id = clerks.id"))
             ->where("is_finished", 1)
-            ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
-            ->count();
+            ->whereBetween("t.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")]);
+
+
+        if ($_SESSION["user"]->privilege === "SHOPKEEPER") {
+            $countQuery = $countQuery->where("clerk_id", $_SESSION["user"]->id);
+        }
+
+        $count = $countQuery->count();
 
         $pagination = $this->getPagination($count, $items_per_page, $page);
+
+        /* Calculate the amount of income */
+        $income = Transaction::join("transaction_items", "transactions.id", "=", "transaction_items.transaction_id")
+            ->selectRaw("SUM(price * (stock_store + stock_warehouse + stock_event)) AS amount")
+            ->whereBetween("transactions.datetime", [$start_date->format("Y-m-d"), $shifted_end_date->format("Y-m-d")])
+            ->where("clerk_id", $_SESSION["user"]->id)
+            ->where("is_finished", 1)
+            ->first()->amount;
+
+        /* Format dates in human readable forms */
+        Date::setLocale('id');
+        $start_date = $start_date->format("l, j F Y");
+        $end_date = $end_date->format("l, j F Y");
 
         return $this->view->render($response, "invoice/transaction_list.twig",
             [
                 "transactions" => $transactions, "message" => $message,
                 "pagination" => $pagination, "start_date" => $data["start_date"],
-                "end_date" => $data["end_date"]
+                "end_date" => $data["end_date"], "income" => $income,
+                "h_start_date" => $start_date, "h_end_date" => $end_date
             ]);
     }
 

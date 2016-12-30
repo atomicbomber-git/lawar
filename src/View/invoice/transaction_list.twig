@@ -37,6 +37,22 @@
             <legend> Daftar Transaksi </legend>
 
             {% if pagination.has_items %}
+
+                <div class="alert alert-success">
+                    {% if h_start_date != h_end_date %}
+                        Menampilkan catatan transaksi dari <strong> {{ h_start_date }} </strong> sampai dengan <strong> {{ h_end_date }} </strong>
+                    {% else %}
+                        Menampilkan catatan transaksi pada hari <strong> {{ h_start_date }} </strong>
+                    {% endif %}
+                </div>
+
+                {% if user.privilege == "SHOPKEEPER" %}
+                    <div class="well well-sm">
+                        <strong> Total Pemasukan: </strong>
+                        <span class="label label-info"> Rp. {{ income | number_format(2, ".", ",") }} </span>
+                    </div>
+                {% endif %}
+
                 <div class="alert alert-info">
                     Menampilkan item ke <strong> {{ pagination.item_begin }} </strong> sampai item ke <strong> {{ pagination.item_end }} </strong> dari
                     seluruh <strong> {{ pagination.total_items }} </strong> item yang ada.
